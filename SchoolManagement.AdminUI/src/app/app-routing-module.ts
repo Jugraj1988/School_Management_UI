@@ -8,6 +8,7 @@ import { Dashboard } from './dashboard/dashboard';
 
 import { authGuard } from './core/guards/auth-guard';
 import { roleGuard } from './core/guards/role-guard';
+import { Users } from './users/users';
 
 const routes: Routes = [
   {
@@ -27,6 +28,10 @@ const routes: Routes = [
       {
         path: 'all-school',
         component: Schools
+      },
+      {
+        path: 'users',
+        component: Users
       }
     ]
   },

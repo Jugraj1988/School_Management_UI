@@ -1,1 +1,122 @@
-<p>users works!</p>
+<div class="users-page">
+  <div class="page-header">
+    <div>
+      <h1>Users Management</h1>
+      <p>View and manage user accounts across all schools.</p>
+    </div>
+
+    <button
+      type="button"
+      class="refresh-button"
+      [disabled]="loading"
+      (click)="loadUsers()"
+    >
+      Refresh
+    </button>
+  </div>
+
+  <div class="users-card">
+    <div class="card-header">
+      <div>
+        <h2>All Users</h2>
+        <p>{{ filteredUsers.length }} users found</p>
+      </div>
+    </div>
+
+    <div class="filters">
+      <input
+        type="text"
+        placeholder="Search name, email, phone or address..."
+        [(ngModel)]="searchText"
+        (ngModelChange)="filterUsers()"
+      />
+
+      <select
+        [(ngModel)]="selectedStatus"
+        (ngModelChange)="filterUsers()"
+      >
+        <option value="">All statuses</option>
+        <option value="true">Active</option>
+        <option value="false">Inactive</option>
+      </select>
+
+      <button
+        type="button"
+        class="clear-button"
+        (click)="clearFilters()"
+      >
+        Clear
+      </button>
+    </div>
+
+    <p *ngIf="successMessage" class="success" role="status">
+      {{ successMessage }}
+    </p>
+
+    <p *ngIf="errorMessage" class="error" role="alert">
+      {{ errorMessage }}
+    </p>
+
+    <div *ngIf="loading" class="loading">
+      Loading users...
+    </div>
+
+    <div
+      *ngIf="!loading && !errorMessage && filteredUsers.length === 0"
+      class="empty-state"
+    >
+      No users found.
+    </div>
+
+    <div
+      *ngIf="!loading && !errorMessage && filteredUsers.length > 0"
+      class="table-wrapper"
+    >
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Full Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Address</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let user of filteredUsers">
+            <td>{{ user.userId }}</td>
+            <td>{{ user.fullName }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.phoneNumber || '—' }}</td>
+            <td>{{ user.address || '—' }}</td>
+
+            <td>
+              <span
+                class="status"
+                [class.active]="user.isActive"
+                [class.inactive]="!user.isActive"
+              >
+                {{ user.isActive ? 'Active' : 'Inactive' }}
+              </span>
+            </td>
+
+            <td>
+              <button
+                type="button"
+                class="action-button"
+                [class.deactivate-button]="user.isActive"
+                [class.activate-button]="!user.isActive"
+                (click)="toggleUserStatus(user)"
+              >
+                {{ user.isActive ? 'Deactivate' : 'Activate' }}
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

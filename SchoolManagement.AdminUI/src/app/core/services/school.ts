@@ -67,7 +67,7 @@ export class SchoolsService {
     request: UpdateSchoolRequest
   ): Observable<unknown> {
     return this.http.put(
-      `${this.apiUrl}/update-school`,
+      `${this.apiUrl}/update-school/${request.schoolId}`,
       request
     );
   }
