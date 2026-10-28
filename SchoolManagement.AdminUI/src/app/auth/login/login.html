@@ -1,0 +1,55 @@
+
+<div class="login-container">
+  <div class="login-card">
+    <h1>School Management</h1>
+    <p>Super Admin Portal</p>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <label for="email">Email</label>
+
+      <input
+        id="email"
+        type="email"
+        formControlName="email"
+        placeholder="Enter your email"
+      />
+
+      <small
+        *ngIf="
+          loginForm.controls.email.touched &&
+          loginForm.controls.email.invalid
+        ">
+        Please enter a valid email address.
+      </small>
+
+      <label for="password">Password</label>
+
+      <input
+        id="password"
+        type="password"
+        formControlName="password"
+        placeholder="Enter your password"
+      />
+
+      <small
+        *ngIf="
+          loginForm.controls.password.touched &&
+          loginForm.controls.password.invalid
+        ">
+        Password is required.
+      </small>
+
+      <p class="error" *ngIf="errorMessage" role="alert">
+        {{ errorMessage }}
+      </p>
+
+      <p class="success" *ngIf="successMessage">
+        {{ successMessage }}
+      </p>
+
+      <button type="submit" [disabled]="loading">
+        {{ loading ? 'Signing in...' : 'Login' }}
+      </button>
+    </form>
+  </div>
+</div>

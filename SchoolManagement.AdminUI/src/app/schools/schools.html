@@ -1,0 +1,460 @@
+
+<div class="schools-page">
+
+  <!-- Page Header -->
+  <div class="page-header">
+    <div>
+      <h2>Schools</h2>
+      <p>Manage all schools in your school management system.</p>
+    </div>
+
+    <button
+      *ngIf="!showAddForm"
+      type="button"
+      class="btn btn-primary"
+      (click)="openAddForm()">
+      + Add School
+    </button>
+  </div>
+
+  <!-- Success Message -->
+  <div
+    *ngIf="successMessage"
+    class="success-message"
+    role="status">
+    {{ successMessage }}
+  </div>
+
+  <!-- Error Message -->
+  <div
+    *ngIf="errorMessage"
+    class="error-message"
+    role="alert">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Add / Edit School Form -->
+  <div *ngIf="showAddForm" class="school-form-card">
+
+    <div class="form-header">
+      <h3>{{ isEditMode ? 'Edit School' : 'Add New School' }}</h3>
+      <p>
+        {{
+          isEditMode
+            ? 'Update the school information below.'
+            : 'Enter the school and administrator details below.'
+        }}
+      </p>
+    </div>
+
+    <form
+      #schoolForm="ngForm"
+      (ngSubmit)="saveSchool(schoolForm)"
+      novalidate>
+
+      <div class="form-grid">
+
+        <!-- School Name -->
+        <div class="form-group">
+          <label for="name">School Name <span>*</span></label>
+
+          <input
+            id="name"
+            type="text"
+            name="name"
+            [(ngModel)]="newSchool.name"
+            #name="ngModel"
+            required
+            minlength="3"
+            maxlength="100"
+            pattern=".*\S.*"
+            placeholder="Enter school name"
+            [class.invalid-input]="name.invalid && (name.dirty || name.touched)"
+          />
+
+          <small
+            class="validation-error"
+            *ngIf="name.errors?.['required'] && (name.dirty || name.touched)">
+            School name is required.
+          </small>
+
+          <small
+            class="validation-error"
+            *ngIf="name.errors?.['minlength'] && (name.dirty || name.touched)">
+            School name must be at least 3 characters.
+          </small>
+
+          <small
+            class="validation-error"
+            *ngIf="name.errors?.['maxlength'] && (name.dirty || name.touched)">
+            School name cannot exceed 100 characters.
+          </small>
+
+          <small
+            class="validation-error"
+            *ngIf="name.errors?.['pattern'] && (name.dirty || name.touched)">
+            School name cannot contain only spaces.
+          </small>
+        </div>
+
+        <!-- Address -->
+        <div class="form-group">
+          <label for="address">Address <span>*</span></label>
+
+          <input
+            id="address"
+            type="text"
+            name="address"
+            [(ngModel)]="newSchool.address"
+            #address="ngModel"
+            required
+            minlength="5"
+            maxlength="250"
+            pattern=".*\S.*"
+            placeholder="Enter school address"
+            [class.invalid-input]="address.invalid && (address.dirty || address.touched)"
+          />
+
+          <small
+            class="validation-error"
+            *ngIf="address.errors?.['required'] && (address.dirty || address.touched)">
+            Address is required.
+          </small>
+
+          <small
+            class="validation-error"
+            *ngIf="address.errors?.['minlength'] && (address.dirty || address.touched)">
+            Address must be at least 5 characters.
+          </small>
+
+          <small
+            class="validation-error"
+            *ngIf="address.errors?.['maxlength'] && (address.dirty || address.touched)">
+            Address cannot exceed 250 characters.
+          </small>
+
+          <small
+            class="validation-error"
+            *ngIf="address.errors?.['pattern'] && (address.dirty || address.touched)">
+            Address cannot contain only spaces.
+          </small>
+        </div>
+
+        <!-- Phone -->
+        <div class="form-group">
+          <label for="phone">Phone Number <span>*</span></label>
+
+          <input
+            id="phone"
+            type="tel"
+            name="phone"
+            [(ngModel)]="newSchool.phone"
+            #phone="ngModel"
+            required
+            maxlength="10"
+            pattern="[0-9]{10}"
+            inputmode="numeric"
+            placeholder="Enter 10-digit phone number"
+            [class.invalid-input]="phone.invalid && (phone.dirty || phone.touched)"
+          />
+
+          <small
+            class="validation-error"
+            *ngIf="phone.errors?.['required'] && (phone.dirty || phone.touched)">
+            Phone number is required.
+          </small>
+
+          <small
+            class="validation-error"
+            *ngIf="phone.errors?.['pattern'] && (phone.dirty || phone.touched)">
+            Enter a valid 10-digit phone number.
+          </small>
+        </div>
+
+        <!-- Administrator Fields: Add Mode Only -->
+        <ng-container *ngIf="!isEditMode">
+
+          <!-- Administrator Full Name -->
+          <div class="form-group">
+            <label for="fullName">Administrator Full Name <span>*</span></label>
+
+            <input
+              id="fullName"
+              type="text"
+              name="fullName"
+              [(ngModel)]="newSchool.fullName"
+              #fullName="ngModel"
+              required
+              minlength="3"
+              maxlength="100"
+              pattern=".*\S.*"
+              placeholder="Enter administrator name"
+              [class.invalid-input]="fullName.invalid && (fullName.dirty || fullName.touched)"
+            />
+
+            <small
+              class="validation-error"
+              *ngIf="fullName.errors?.['required'] && (fullName.dirty || fullName.touched)">
+              Administrator name is required.
+            </small>
+
+            <small
+              class="validation-error"
+              *ngIf="fullName.errors?.['minlength'] && (fullName.dirty || fullName.touched)">
+              Name must be at least 3 characters.
+            </small>
+
+            <small
+              class="validation-error"
+              *ngIf="fullName.errors?.['maxlength'] && (fullName.dirty || fullName.touched)">
+              Name cannot exceed 100 characters.
+            </small>
+
+            <small
+              class="validation-error"
+              *ngIf="fullName.errors?.['pattern'] && (fullName.dirty || fullName.touched)">
+              Name cannot contain only spaces.
+            </small>
+          </div>
+
+          <!-- Email -->
+          <div class="form-group">
+            <label for="email">Administrator Email <span>*</span></label>
+
+            <input
+              id="email"
+              type="email"
+              name="email"
+              [(ngModel)]="newSchool.email"
+              #email="ngModel"
+              required
+              maxlength="254"
+              pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$"
+              placeholder="admin@example.com"
+              [class.invalid-input]="email.invalid && (email.dirty || email.touched)"
+            />
+
+            <small
+              class="validation-error"
+              *ngIf="email.errors?.['required'] && (email.dirty || email.touched)">
+              Email is required.
+            </small>
+
+            <small
+              class="validation-error"
+              *ngIf="email.errors?.['email'] || (email.errors?.['pattern'] && (email.dirty || email.touched))">
+              Enter a valid email address.
+            </small>
+
+            <small
+              class="validation-error"
+              *ngIf="email.errors?.['maxlength'] && (email.dirty || email.touched)">
+              Email cannot exceed 254 characters.
+            </small>
+          </div>
+
+          <!-- Password -->
+          <div class="form-group">
+            <label for="password">Password <span>*</span></label>
+
+            <input
+              id="password"
+              type="password"
+              name="password"
+              [(ngModel)]="newSchool.password"
+              #password="ngModel"
+              required
+              minlength="8"
+              maxlength="128"
+              pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9]).{8,128}$"
+              placeholder="Enter administrator password"
+              [class.invalid-input]="password.invalid && (password.dirty || password.touched)"
+            />
+
+            <small
+              class="validation-error"
+              *ngIf="password.errors?.['required'] && (password.dirty || password.touched)">
+              Password is required.
+            </small>
+
+            <small
+              class="validation-error"
+              *ngIf="password.errors?.['minlength'] && (password.dirty || password.touched)">
+              Password must be at least 8 characters.
+            </small>
+
+            <small
+              class="validation-error"
+              *ngIf="password.errors?.['pattern'] && (password.dirty || password.touched)">
+              Include uppercase, lowercase, a number, and a special character.
+            </small>
+
+            <small
+              class="validation-error"
+              *ngIf="password.errors?.['maxlength'] && (password.dirty || password.touched)">
+              Password cannot exceed 128 characters.
+            </small>
+          </div>
+
+        </ng-container>
+      </div>
+
+      <!-- Form Actions -->
+      <div class="form-actions">
+        <button
+          type="submit"
+          class="btn btn-primary"
+          [disabled]="schoolForm.invalid || saving">
+
+          {{
+            saving
+              ? 'Saving...'
+              : isEditMode
+                ? 'Update School'
+                : 'Save School'
+          }}
+        </button>
+
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="cancelAdd()"
+          [disabled]="saving">
+          Cancel
+        </button>
+      </div>
+
+    </form>
+  </div>
+
+  <!-- School List -->
+  <div *ngIf="!showAddForm" class="schools-list-card">
+
+    <!-- Search and Summary -->
+    <div class="list-toolbar">
+      <div>
+        <h3>All Schools</h3>
+        <p>Total schools: {{ schools.length }}</p>
+      </div>
+
+      <div class="search-box">
+        <input
+          type="search"
+          name="searchText"
+          [(ngModel)]="searchText"
+          (ngModelChange)="searchSchools()"
+          placeholder="Search schools..."
+          aria-label="Search schools by name, address, or phone"
+        />
+
+        <button
+          *ngIf="searchText"
+          type="button"
+          class="btn btn-secondary"
+          (click)="clearSearch()">
+          Clear
+        </button>
+      </div>
+    </div>
+
+    <!-- Loading -->
+    <div *ngIf="loading" class="loading-message" role="status">
+      Loading schools...
+    </div>
+
+    <!-- Table -->
+    <div
+      *ngIf="!loading && filteredSchools.length > 0"
+      class="table-responsive">
+
+      <table class="schools-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>School Name</th>
+            <th>Address</th>
+            <th>Phone</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let school of filteredSchools">
+            <td>{{ school.schoolId }}</td>
+            <td>{{ school.name }}</td>
+            <td>{{ school.address }}</td>
+            <td>{{ school.phone }}</td>
+
+            <td class="actions-cell">
+              <button
+                type="button"
+                class="btn btn-edit"
+                (click)="openEditForm(school)">
+                Edit
+              </button>
+
+              <!-- Status actions require school.isActive from the API -->
+              <ng-container *ngIf="$any(school).isActive === true; else activateAction">
+                <button
+                  type="button"
+                  class="btn btn-danger"
+                  (click)="deactivateSchool(school)"
+                  [disabled]="changingStatusSchoolId !== null">
+                  {{
+                    changingStatusSchoolId === school.schoolId
+                      ? 'Please wait...'
+                      : 'Deactivate'
+                  }}
+                </button>
+              </ng-container>
+
+              <ng-template #activateAction>
+                <button
+                  type="button"
+                  class="btn btn-success"
+                  (click)="activateSchool(school)"
+                  [disabled]="changingStatusSchoolId !== null">
+                  {{
+                    changingStatusSchoolId === school.schoolId
+                      ? 'Please wait...'
+                      : 'Activate'
+                  }}
+                </button>
+              </ng-template>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- No Results -->
+    <div
+      *ngIf="!loading && filteredSchools.length === 0 && schools.length > 0"
+      class="empty-state">
+      <h4>No matching schools found</h4>
+      <p>Try another search term.</p>
+      <button
+        type="button"
+        class="btn btn-secondary"
+        (click)="clearSearch()">
+        Clear Search
+      </button>
+    </div>
+
+    <!-- No Schools -->
+    <div
+      *ngIf="!loading && schools.length === 0"
+      class="empty-state">
+      <h4>No schools available</h4>
+      <p>Add your first school to get started.</p>
+      <button
+        type="button"
+        class="btn btn-primary"
+        (click)="openAddForm()">
+        + Add School
+      </button>
+    </div>
+
+  </div>
+
+</div>

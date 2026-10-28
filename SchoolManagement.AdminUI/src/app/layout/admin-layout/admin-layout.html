@@ -1,0 +1,68 @@
+<div class="admin-container">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+
+        <div class="logo">
+            <h2>School Admin</h2>
+        </div>
+
+        <nav class="sidebar-nav">
+            <a routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+                <span>📊</span> Dashboard
+            </a>
+
+            <a routerLink="/dashboard/all-school" routerLinkActive="active">
+                <span>🏫</span> Schools
+            </a>
+
+            <a routerLink="/users" routerLinkActive="active">
+                <span>👥</span> Users
+            </a>
+
+            <a routerLink="/subscriptions" routerLinkActive="active">
+                <span>💳</span> Subscriptions
+            </a>
+
+            <a routerLink="/reports" routerLinkActive="active">
+                <span>📈</span> Reports
+            </a>
+
+            <a routerLink="/settings" routerLinkActive="active">
+                <span>⚙️</span> Settings
+            </a>
+        </nav>
+
+        <button class="logout-button" type="button">
+            🚪 Logout
+        </button>
+
+    </aside>
+
+    <!-- Main Content -->
+    <div class="main-container">
+
+        <!-- Top Navbar -->
+        <header class="top-navbar">
+            <div>
+                <h3>Super Admin Panel</h3>
+                <p>Manage your school management system</p>
+            </div>
+
+            <div class="admin-profile">
+                <span class="profile-icon">👤</span>
+                <div>
+                    <strong>Super Admin</strong>
+                    <small>Administrator</small>
+                </div>
+            </div>
+        </header>
+
+        <!-- Child Pages Render Here -->
+        <main class="page-content">
+            <router-outlet></router-outlet>
+        </main>
+
+    </div>
+
+</div>
