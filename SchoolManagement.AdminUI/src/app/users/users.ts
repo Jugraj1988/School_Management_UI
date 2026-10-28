@@ -82,48 +82,52 @@ export class Users implements OnInit {
     this.cdr.detectChanges();
   }
 
-  toggleUserStatus(user: User): void {
-    this.errorMessage = '';
-    this.successMessage = '';
+toggleUserStatus(user: User): void {
+  this.errorMessage = '';
+  this.successMessage = '';
 
-    const request$ = user.isActive
-      ? this.userService.deactivateUser(user.userId)
-      : this.userService.activateUser(user.userId);
+  const wasActive = user.isActive;
 
-    request$
-      .pipe(
-        finalize(() => this.cdr.detectChanges())
-      )
-      .subscribe({
-        next: updatedUser => {
-          const index = this.users.findIndex(
-            item => item.userId === user.userId
-          );
+  const request$ = wasActive
+    ? this.userService.deactivateUser(user.userId)
+    : this.userService.activateUser(user.userId);
 
-          if (index !== -1) {
-            this.users[index] = updatedUser;
-          }
-
-          this.filterUsers();
-
-          this.successMessage = updatedUser.isActive
-            ? 'User activated successfully.'
-            : 'User deactivated successfully.';
-
+  request$
+    .pipe(
+      finalize(() => {
+        this.cdr.detectChanges();
+      })
+    )
+    .subscribe({
+      next: success => {
+        if (!success) {
+          this.errorMessage = 'Unable to update user status.';
           this.cdr.detectChanges();
-          this.loadUsers();
-        },
-        error: error => {
-          this.errorMessage =
-            error?.error?.Message ||
-            error?.error?.message ||
-            error?.error?.title ||
-            'Unable to update user status.';
-
-          this.cdr.detectChanges();
+          return;
         }
-      });
-  }
+
+        user.isActive = !wasActive;
+
+        this.filterUsers();
+
+        this.successMessage = wasActive
+          ? 'User deactivated successfully.'
+          : 'User activated successfully.';
+
+        this.cdr.detectChanges();
+      },
+      error: error => {
+        this.errorMessage =
+          error?.error?.Message ||
+          error?.error?.message ||
+          error?.error?.title ||
+          'Unable to update user status.';
+
+        this.cdr.detectChanges();
+      }
+    });
+}
+
 
   clearFilters(): void {
     this.searchText = '';
