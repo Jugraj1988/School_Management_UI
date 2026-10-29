@@ -1,1 +1,140 @@
-<p>dashboard works!</p>
+
+<div class="dashboard-container">
+
+  <div class="dashboard-header">
+    <div>
+      <h1>Dashboard</h1>
+      <p>Welcome to your School Management Admin Panel.</p>
+    </div>
+
+    <button
+      class="refresh-btn"
+      type="button"
+      (click)="loadDashboard()"
+      [disabled]="loading">
+      <span *ngIf="!loading">↻ Refresh</span>
+      <span *ngIf="loading">Loading...</span>
+    </button>
+  </div>
+
+  <div class="error-message" *ngIf="errorMessage">
+    {{ errorMessage }}
+  </div>
+
+  <div class="loading-message" *ngIf="loading">
+    Loading dashboard data...
+  </div>
+
+  <div class="stats-grid" *ngIf="!loading">
+
+    <div class="stat-card schools-card">
+      <div class="stat-icon">🏫</div>
+      <div>
+        <p>Total Schools</p>
+        <h2>{{ totalSchools }}</h2>
+        <span>Registered schools</span>
+      </div>
+    </div>
+
+    <div class="stat-card users-card">
+      <div class="stat-icon">👥</div>
+      <div>
+        <p>Total Users</p>
+        <h2>{{ totalUsers }}</h2>
+        <span>All registered users</span>
+      </div>
+    </div>
+
+    <div class="stat-card active-card">
+      <div class="stat-icon">✓</div>
+      <div>
+        <p>Active Users</p>
+        <h2>{{ activeUsers }}</h2>
+        <span>Currently active accounts</span>
+      </div>
+    </div>
+
+    <div class="stat-card inactive-card">
+      <div class="stat-icon">⊘</div>
+      <div>
+        <p>Inactive Users</p>
+        <h2>{{ inactiveUsers }}</h2>
+        <span>Deactivated accounts</span>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="recent-users-section" *ngIf="!loading">
+
+    <div class="section-header">
+      <div>
+        <h2>Recent Users</h2>
+        <p>Latest registered user accounts</p>
+      </div>
+
+      <a routerLink="/dashboard/users" class="view-all-link">
+        View All Users →
+      </a>
+    </div>
+
+    <div class="table-wrapper" *ngIf="recentUsers.length > 0">
+      <table>
+        <thead>
+          <tr>
+            <th>User ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let user of recentUsers">
+            <td>#{{ user.userId }}</td>
+            <td>{{ user.fullName }}</td>
+            <td>{{ user.email }}</td>
+            <td>
+              <span
+                class="status"
+                [class.status-active]="user.isActive"
+                [class.status-inactive]="!user.isActive">
+                {{ user.isActive ? 'Active' : 'Inactive' }}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="empty-state" *ngIf="recentUsers.length === 0">
+      No users found.
+    </div>
+
+  </div>
+
+  <div class="quick-actions">
+    <h2>Quick Actions</h2>
+
+    <div class="action-grid">
+      <a routerLink="/dashboard/all-school" class="action-card">
+        <span>🏫</span>
+        <div>
+          <h3>Manage Schools</h3>
+          <p>View and manage registered schools.</p>
+        </div>
+        <span class="arrow">→</span>
+      </a>
+
+      <a routerLink="/dashboard/users" class="action-card">
+        <span>👥</span>
+        <div>
+          <h3>Manage Users</h3>
+          <p>View users and manage account status.</p>
+        </div>
+        <span class="arrow">→</span>
+      </a>
+    </div>
+  </div>
+
+</div>
