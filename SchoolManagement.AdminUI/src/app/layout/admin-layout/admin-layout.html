@@ -1,68 +1,96 @@
-<div class="admin-container">
 
-    <!-- Sidebar -->
-    <aside class="sidebar">
-
-        <div class="logo">
-            <h2>School Admin</h2>
-        </div>
-
-        <nav class="sidebar-nav">
-            <a routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-                <span>📊</span> Dashboard
-            </a>
-
-            <a routerLink="/dashboard/all-school" routerLinkActive="active">
-                <span>🏫</span> Schools
-            </a>
-
-            <a routerLink="/dashboard/users" routerLinkActive="active">
-                <span>👥</span> Users
-            </a>
-
-            <a routerLink="/subscriptions" routerLinkActive="active">
-                <span>💳</span> Subscriptions
-            </a>
-
-            <a routerLink="/reports" routerLinkActive="active">
-                <span>📈</span> Reports
-            </a>
-
-            <a routerLink="/settings" routerLinkActive="active">
-                <span>⚙️</span> Settings
-            </a>
-        </nav>
-
-        <button class="logout-button" type="button">
-            🚪 Logout
-        </button>
-
-    </aside>
-
-    <!-- Main Content -->
-    <div class="main-container">
-
-        <!-- Top Navbar -->
-        <header class="top-navbar">
-            <div>
-                <h3>Super Admin Panel</h3>
-                <p>Manage your school management system</p>
-            </div>
-
-            <div class="admin-profile">
-                <span class="profile-icon">👤</span>
-                <div>
-                    <strong>Super Admin</strong>
-                    <small>Administrator</small>
-                </div>
-            </div>
-        </header>
-
-        <!-- Child Pages Render Here -->
-        <main class="page-content">
-            <router-outlet></router-outlet>
-        </main>
-
+<div class="admin-layout">
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <span class="brand-icon">🏫</span>
+      <span>School Management</span>
     </div>
 
+    <div *ngIf="loading" class="sidebar-message">
+      Loading navigation...
+    </div>
+
+    <div *ngIf="errorMessage" class="sidebar-error">
+      {{ errorMessage }}
+      <button type="button" (click)="loadMenus()">
+        Retry
+      </button>
+    </div>
+
+    <nav *ngIf="!loading && !errorMessage" class="sidebar-nav">
+      <ng-container
+        *ngFor="let menu of menus; trackBy: trackByMenuId">
+
+        <!-- Parent menu -->
+        <div *ngIf="menu.childMenus?.length" class="menu-group">
+          <button
+            type="button"
+            class="menu-link parent-link"
+            (click)="toggleMenu(menu.navigationMenuId)"
+            [attr.aria-expanded]="isExpanded(menu.navigationMenuId)">
+
+            <span class="menu-icon">
+              {{ menu.icon || 'folder' }}
+            </span>
+
+            <span class="menu-title">{{ menu.title }}</span>
+
+            <span class="menu-arrow">
+              {{ isExpanded(menu.navigationMenuId) ? '−' : '+' }}
+            </span>
+          </button>
+
+          <div
+            class="submenu"
+            *ngIf="isExpanded(menu.navigationMenuId)">
+
+            <a
+              *ngFor="let child of menu.childMenus; trackBy: trackByMenuId"
+              class="menu-link child-link"
+              [routerLink]="child.route"
+              routerLinkActive="active"
+              [routerLinkActiveOptions]="{ exact: true }"
+              [attr.aria-disabled]="!child.route">
+
+              <span class="menu-icon">
+                {{ child.icon || 'circle' }}
+              </span>
+
+              <span class="menu-title">{{ child.title }}</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Menu without children -->
+        <a
+          *ngIf="!menu.childMenus?.length && menu.route"
+          class="menu-link"
+          [routerLink]="menu.route"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }">
+
+          <span class="menu-icon">
+            {{ menu.icon || 'circle' }}
+          </span>
+
+          <span class="menu-title">{{ menu.title }}</span>
+        </a>
+
+      </ng-container>
+    </nav>
+    <div class="sidebar-footer">
+  <button
+    type="button"
+    class="logout-button"
+    (click)="logout()">
+
+    <span class="logout-icon">↪</span>
+    <span>Logout</span>
+  </button>
+</div>
+  </aside>
+
+  <main class="main-content">
+    <router-outlet></router-outlet>
+  </main>
 </div>

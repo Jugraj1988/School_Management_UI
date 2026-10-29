@@ -1,0 +1,99 @@
+.not-found-container {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  background: #f4f7fb;
+}
+
+.not-found-card {
+  width: 100%;
+  max-width: 520px;
+  padding: 45px 30px;
+  text-align: center;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+}
+
+.error-code {
+  color: #2563eb;
+  font-size: 90px;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: 4px;
+}
+
+.error-icon {
+  margin: 20px 0 10px;
+  font-size: 40px;
+}
+
+.not-found-card h1 {
+  margin: 10px 0;
+  color: #1e293b;
+  font-size: 28px;
+}
+
+.not-found-card p {
+  margin: 15px 0 28px;
+  color: #64748b;
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+.button-group {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.button-group button {
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.btn-primary {
+  color: white;
+  background: #2563eb;
+  border: 1px solid #2563eb;
+}
+
+.btn-primary:hover {
+  background: #1d4ed8;
+}
+
+.btn-secondary {
+  color: #334155;
+  background: white;
+  border: 1px solid #cbd5e1;
+}
+
+.btn-secondary:hover {
+  background: #f1f5f9;
+}
+
+@media (max-width: 480px) {
+  .error-code {
+    font-size: 70px;
+  }
+
+  .not-found-card h1 {
+    font-size: 23px;
+  }
+
+  .button-group {
+    flex-direction: column;
+  }
+
+  .button-group button {
+    width: 100%;
+  }
+}

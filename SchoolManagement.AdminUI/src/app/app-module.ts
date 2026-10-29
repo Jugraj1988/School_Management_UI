@@ -1,20 +1,14 @@
 import {
   NgModule,
   provideBrowserGlobalErrorListeners,
-  provideZoneChangeDetection
+  provideZoneChangeDetection,
 } from '@angular/core';
 
 import { BrowserModule } from '@angular/platform-browser';
 
-import {
-  provideHttpClient,
-  withInterceptors
-} from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 
-import {
-  FormsModule,
-  ReactiveFormsModule
-} from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AuthInterceptor } from './core/interceptors/auth-interceptor';
 import { AppRoutingModule } from './app-routing-module';
@@ -26,30 +20,16 @@ import { Dashboard } from './dashboard/dashboard';
 import { Schools } from './schools/schools';
 import { Users } from './users/users';
 import { Roles } from './roles/roles';
+import { NotFound } from './not-found/not-found';
 
 @NgModule({
-  declarations: [
-    App,
-    LoginComponent,
-    AdminLayout,
-    Dashboard,
-    Schools,
-    Users,
-    Roles
-  ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    ReactiveFormsModule,
-    FormsModule
-  ],
+  declarations: [App, LoginComponent, AdminLayout, Dashboard, Schools, Users, Roles, NotFound],
+  imports: [BrowserModule, AppRoutingModule, ReactiveFormsModule, FormsModule],
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideZoneChangeDetection(),
-    provideHttpClient(
-      withInterceptors([AuthInterceptor])
-    )
+    provideHttpClient(withInterceptors([AuthInterceptor])),
   ],
-  bootstrap: [App]
+  bootstrap: [App],
 })
 export class AppModule {}
