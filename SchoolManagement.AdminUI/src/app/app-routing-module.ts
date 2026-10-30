@@ -23,20 +23,51 @@ const routes: Routes = [
     canActivate: [authGuard, roleGuard],
     data: { role: 'Super Admin' },
     children: [
+      // Dashboard
       {
         path: '',
         component: Dashboard
       },
+
+      // Schools
       {
         path: 'all-school',
         component: Schools
       },
+
+      // Students
+      // {
+      //   path: 'all-students',
+      //   component: Students
+      // },
+
+      // Teachers
+      // {
+      //   path: 'all-teachers',
+      //   component: Teachers
+      // },
+
+      // Users
       {
         path: 'users',
         component: Users
-      }
+      },
+
+      // Roles
+      // {
+      //   path: 'all-roles',
+      //   component: Roles
+      // },
+      // {
+
+      // Permissions
+      // {
+      //   path: 'all-permissions',
+      //   component: Permissions
+      // },
     ]
   },
+
   {
     path: '',
     redirectTo: 'login',
