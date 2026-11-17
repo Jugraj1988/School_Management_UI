@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { Schools } from './schools/schools';
 import { LoginComponent } from './auth/login/login';
+import {Teachers} from './teachers/teachers';
 import { AdminLayout } from './layout/admin-layout/admin-layout';
 import { Dashboard } from './dashboard/dashboard';
 
@@ -41,11 +42,11 @@ const routes: Routes = [
       //   component: Students
       // },
 
-      // Teachers
-      // {
-      //   path: 'all-teachers',
-      //   component: Teachers
-      // },
+      //Teachers
+      {
+        path: 'all-teachers',
+        component: Teachers
+      },
 
       // Users
       {

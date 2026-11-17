@@ -21,9 +21,20 @@ import { Schools } from './schools/schools';
 import { Users } from './users/users';
 import { Roles } from './roles/roles';
 import { NotFound } from './not-found/not-found';
+import { Teachers } from './teachers/teachers';
 
 @NgModule({
-  declarations: [App, LoginComponent, AdminLayout, Dashboard, Schools, Users, Roles, NotFound],
+  declarations: [
+    App,
+    LoginComponent,
+    AdminLayout,
+    Dashboard,
+    Schools,
+    Users,
+    Roles,
+    NotFound,
+    Teachers,
+  ],
   imports: [BrowserModule, AppRoutingModule, ReactiveFormsModule, FormsModule],
   providers: [
     provideBrowserGlobalErrorListeners(),
