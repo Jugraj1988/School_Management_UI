@@ -1,0 +1,266 @@
+
+<div class="students-container">
+
+  <!-- Page Header -->
+  <div class="page-header">
+    <div>
+      <h2>Students</h2>
+      <p>Manage your school students</p>
+    </div>
+
+    <button
+      type="button"
+      class="btn btn-primary"
+      *ngIf="!showForm"
+      (click)="openAddForm()">
+      + Add Student
+    </button>
+  </div>
+
+  <!-- Success Message -->
+  <div class="alert alert-success" *ngIf="successMessage">
+    {{ successMessage }}
+  </div>
+
+  <!-- Error Message -->
+  <div class="alert alert-danger" *ngIf="errorMessage">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Student Form -->
+  <div class="form-container" *ngIf="showForm">
+
+    <h3>{{ isEditMode ? 'Update Student' : 'Add Student' }}</h3>
+
+    <form [formGroup]="studentForm" (ngSubmit)="saveStudent()">
+
+      <div class="form-grid">
+
+        <!-- Full Name -->
+        <div class="form-group">
+          <label>Full Name</label>
+          <input
+            type="text"
+            formControlName="fullName"
+            placeholder="Enter full name">
+
+          <small class="error"
+            *ngIf="f['fullName'].touched && f['fullName'].invalid">
+            Enter a valid full name containing at least two words.
+          </small>
+        </div>
+
+        <!-- Email -->
+        <div class="form-group">
+          <label>Email</label>
+          <input
+            type="email"
+            formControlName="email"
+            placeholder="Enter email">
+
+          <small class="error"
+            *ngIf="f['email'].touched && f['email'].invalid">
+            Enter a valid email address.
+          </small>
+        </div>
+
+        <!-- Phone -->
+        <div class="form-group">
+          <label>Phone Number</label>
+          <input
+            type="text"
+            formControlName="phoneNumber"
+            placeholder="Enter phone number">
+
+          <small class="error"
+            *ngIf="f['phoneNumber'].touched && f['phoneNumber'].invalid">
+            Enter a valid phone number (10–12 digits, starting with 6–9).
+          </small>
+        </div>
+
+        <!-- Date of Birth -->
+        <div class="form-group">
+          <label>Date of Birth</label>
+          <input
+            type="date"
+            formControlName="dateOfBirth">
+        </div>
+
+        <!-- Gender -->
+        <div class="form-group">
+          <label>Gender</label>
+          <select formControlName="gender">
+            <option value="">Select Gender</option>
+
+            <option *ngFor="let gender of genders" [value]="gender">
+              {{ gender }}
+            </option>
+          </select>
+        </div>
+
+        <!-- School Class -->
+        <div class="form-group">
+          <label>School Class</label>
+          <select formControlName="schoolClassId">
+            <option value="">Select Class</option>
+
+            <option *ngFor="let schoolClass of classes"
+                    [value]="schoolClass.id">
+              {{ schoolClass.grade }} - {{ schoolClass.section }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Academic Year -->
+        <div class="form-group">
+          <label>Academic Year</label>
+          <select formControlName="academicYearId">
+            <option value="">Select Academic Year</option>
+
+            <option *ngFor="let year of academicYears"
+                    [value]="year.academicYearId">
+              {{ year.name }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Address -->
+        <div class="form-group">
+          <label>Address</label>
+          <textarea
+            formControlName="address"
+            placeholder="Enter address">
+          </textarea>
+        </div>
+
+        <!-- Password: Add Only -->
+        <div class="form-group" *ngIf="!isEditMode">
+          <label>Password</label>
+          <input
+            type="password"
+            formControlName="password"
+            placeholder="Enter password">
+
+          <small class="error"
+            *ngIf="f['password'].touched && f['password'].invalid">
+            Password is required and cannot exceed 12 characters.
+          </small>
+        </div>
+
+      </div>
+
+      <!-- Form Buttons -->
+      <div class="form-actions">
+
+        <button
+          type="submit"
+          class="btn btn-primary"
+          [disabled]="saving || studentForm.invalid">
+
+          {{ saving ? 'Saving...' : (isEditMode ? 'Update Student' : 'Save Student') }}
+
+        </button>
+
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="closeForm()"
+          [disabled]="saving">
+          Cancel
+        </button>
+
+      </div>
+
+    </form>
+  </div>
+
+  <!-- Student List -->
+  <div class="table-container" *ngIf="!showForm">
+
+    <div class="table-header">
+      <h3>Student List</h3>
+
+      <input
+        type="text"
+        [(ngModel)]="searchText"
+        (input)="searchStudents()"
+        placeholder="Search students...">
+    </div>
+
+    <div *ngIf="loading" class="loading">
+      Loading students...
+    </div>
+
+    <table *ngIf="!loading && filteredStudents.length > 0">
+
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Full Name</th>
+          <th>Email</th>
+          <th>Phone</th>
+          <th>Gender</th>
+          <th>Class</th>
+          <th>Academic Year</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let student of filteredStudents; let i = index">
+
+          <td>{{ i + 1 }}</td>
+          <td>{{ student.fullName }}</td>
+          <td>{{ student.email }}</td>
+          <td>{{ student.phoneNumber }}</td>
+          <td>{{ student.gender }}</td>
+          <td>{{ student.grade }}</td>
+          <td>{{ student.name }}</td>
+
+          <td>
+            <span [class.active]="student.isActive"
+                  [class.inactive]="!student.isActive">
+              {{ student.isActive ? 'Active' : 'Inactive' }}
+            </span>
+          </td>
+
+          <td>
+            <button
+              type="button"
+              class="btn btn-edit"
+              (click)="editStudent(student)">
+              Edit
+            </button>
+
+            <button
+              type="button"
+              class="btn btn-success"
+              *ngIf="!student.isActive"
+              (click)="activateStudent(student.studentId)">
+              Activate
+            </button>
+
+            <button
+              type="button"
+              class="btn btn-danger"
+              *ngIf="student.isActive"
+              (click)="deactivateStudent(student.studentId)">
+              Deactivate
+            </button>
+          </td>
+
+        </tr>
+      </tbody>
+
+    </table>
+
+    <div
+      class="empty-state"
+      *ngIf="!loading && filteredStudents.length === 0">
+      No students found.
+    </div>
+
+  </div>
+
+</div>

@@ -22,6 +22,7 @@ import { Users } from './users/users';
 import { Roles } from './roles/roles';
 import { NotFound } from './not-found/not-found';
 import { Teachers } from './teachers/teachers';
+import { Students } from './students/students';
 
 @NgModule({
   declarations: [
@@ -34,6 +35,7 @@ import { Teachers } from './teachers/teachers';
     Roles,
     NotFound,
     Teachers,
+    Students,
   ],
   imports: [BrowserModule, AppRoutingModule, ReactiveFormsModule, FormsModule],
   providers: [

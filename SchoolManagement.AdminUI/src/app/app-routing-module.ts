@@ -6,6 +6,7 @@ import { LoginComponent } from './auth/login/login';
 import {Teachers} from './teachers/teachers';
 import { AdminLayout } from './layout/admin-layout/admin-layout';
 import { Dashboard } from './dashboard/dashboard';
+import {Students} from './students/students';
 
 import { authGuard } from './core/guards/auth-guard';
 import { roleGuard } from './core/guards/role-guard';
@@ -37,10 +38,10 @@ const routes: Routes = [
       },
 
       // Students
-      // {
-      //   path: 'all-students',
-      //   component: Students
-      // },
+      {
+        path: 'all-students',
+        component: Students
+      },
 
       //Teachers
       {
