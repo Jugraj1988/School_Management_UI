@@ -38,19 +38,12 @@ export class Students implements OnInit {
   errorMessage = '';
   successMessage = '';
 
-  getErrorMessage(error: any, defaultMessage: string): string {
-    return error.error?.Message ||
-      error.error?.message ||
-      error.message ||
-      defaultMessage;
-  }
-
   constructor(
     private fb: FormBuilder,
     private studentService: StudentService,
-    private cdr: ChangeDetectorRef,
     private schoolClassService: SchoolClassService,
-    private academicYearService: AcademicYearService
+    private academicYearService: AcademicYearService,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
@@ -113,12 +106,11 @@ export class Students implements OnInit {
         this.classes = response.data ?? [];
         this.cdr.detectChanges();
       },
-      error: (error: any) => {
-        console.error(error);
-        this.errorMessage = this.getErrorMessage(
-          error,
-          'Unable to Load classes.'
-        );
+      error: (error) => {
+          this.errorMessage =
+              error.error?.Message ||
+              error.error?.message ||
+              error.message || 'Unable to load classes.';
       }
     });
   }
@@ -132,12 +124,11 @@ export class Students implements OnInit {
 
         this.cdr.detectChanges();
       },
-      error: (error: any) => {
-        console.error(error);
-        this.errorMessage = this.getErrorMessage(
-          error,
-          'Unable to Load Academicyears.'
-        );
+      error: (error) => {
+         this.errorMessage =
+              error.error?.Message ||
+              error.error?.message ||
+              error.message || 'Unable to load academic years.';
       }
     });
   }
@@ -163,10 +154,10 @@ export class Students implements OnInit {
         },
         error: (error: any) => {
           console.error(error);
-          this.errorMessage = this.getErrorMessage(
-            error,
-            'Unable to load student.'
-          );
+            this.errorMessage =
+              error.error?.Message ||
+              error.error?.message ||
+              error.message || 'Unable to load students.';
         }
       });
   }
@@ -285,10 +276,10 @@ export class Students implements OnInit {
           },
           error: (error: any) => {
             console.error(error);
-            this.errorMessage = this.getErrorMessage(
-              error,
-              'Unable to update student.'
-            );
+            this.errorMessage =
+              error.error?.Message ||
+              error.error?.message ||
+              error.message || 'Unable to update student.';
           }
         });
 
@@ -320,10 +311,12 @@ export class Students implements OnInit {
           },
           error: (error: any) => {
             console.error(error);
-            this.errorMessage = this.getErrorMessage(
-              error,
-              'Unable to create student.'
-            );
+
+            this.errorMessage =
+              error.error?.Message ||
+              error.error?.message ||
+              error.message ||
+              'Unable to create student.';
           }
         });
     }
@@ -334,6 +327,7 @@ export class Students implements OnInit {
     this.showForm = false;
     this.studentForm.reset();
     this.loadStudents();
+     this.cdr.detectChanges();
   }
 
   // Activate Student
@@ -349,10 +343,11 @@ export class Students implements OnInit {
       },
       error: (error: any) => {
         console.error(error);
-        this.errorMessage = this.getErrorMessage(
-          error,
-          'Unable to activate student.'
-        );
+          this.errorMessage =
+              error.error?.Message ||
+              error.error?.message ||
+              error.message || 'Unable to activate student.';
+               this.cdr.detectChanges();
       }
     });
   }
@@ -370,11 +365,13 @@ export class Students implements OnInit {
       },
       error: (error: any) => {
         console.error(error);
-        this.errorMessage = this.getErrorMessage(
-          error,
-          'Unable to deactivate student.'
-        );
+        this.errorMessage =
+          error.error?.Message ||
+          error.error?.message ||
+          error.message || 'Unable to deactivate student.';
+           this.cdr.detectChanges();
       }
+      
     });
   }
 
