@@ -58,7 +58,8 @@ export class Students implements OnInit {
     this.studentForm = this.fb.group({
       fullName: ['', [
         Validators.required,
-        Validators.pattern(/^[A-Za-z]{2,}(?: [A-Za-z]{2,})+$/)
+      Validators.minLength(4),
+      Validators.maxLength(30)
       ]],
 
       email: ['', [
@@ -189,7 +190,8 @@ export class Students implements OnInit {
 
     this.studentForm.get('fullName')?.setValidators([
       Validators.required,
-      Validators.pattern(/^[A-Za-z]{2,}(?: [A-Za-z]{2,})+$/)
+      Validators.minLength(4),
+      Validators.maxLength(30)
     ]);
 
     this.studentForm.get('phoneNumber')?.setValidators([

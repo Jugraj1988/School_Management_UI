@@ -1,140 +1,421 @@
+<div class="container-fluid p-3 p-md-4">
 
-<div class="dashboard-container">
+  <!-- Dashboard Header -->
+  <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
 
-  <div class="dashboard-header">
     <div>
-      <h1>Dashboard</h1>
-      <p>Welcome to your School Management Admin Panel.</p>
+      <h2 class="fw-bold text-dark mb-1">
+        Dashboard
+      </h2>
+
+      <p class="text-secondary mb-0">
+        Welcome to your School Management Admin Panel.
+      </p>
     </div>
 
     <button
-      class="refresh-btn"
+      class="btn btn-primary"
       type="button"
       (click)="loadDashboard()"
       [disabled]="loading">
-      <span *ngIf="!loading">↻ Refresh</span>
-      <span *ngIf="loading">Loading...</span>
+
+      <span *ngIf="!loading">
+        <i class="fa-solid fa-rotate me-2"></i>
+        Refresh
+      </span>
+
+      <span *ngIf="loading">
+        <span class="spinner-border spinner-border-sm me-2"></span>
+        Loading...
+      </span>
+
     </button>
+
   </div>
 
-  <div class="error-message" *ngIf="errorMessage">
+
+  <!-- Error Message -->
+  <div
+    class="alert alert-danger d-flex align-items-center"
+    *ngIf="errorMessage">
+
+    <i class="fa-solid fa-circle-exclamation me-2"></i>
+
     {{ errorMessage }}
-  </div>
-
-  <div class="loading-message" *ngIf="loading">
-    Loading dashboard data...
-  </div>
-
-  <div class="stats-grid" *ngIf="!loading">
-
-    <div class="stat-card schools-card">
-      <div class="stat-icon">🏫</div>
-      <div>
-        <p>Total Schools</p>
-        <h2>{{ totalSchools }}</h2>
-        <span>Registered schools</span>
-      </div>
-    </div>
-
-    <div class="stat-card users-card">
-      <div class="stat-icon">👥</div>
-      <div>
-        <p>Total Users</p>
-        <h2>{{ totalUsers }}</h2>
-        <span>All registered users</span>
-      </div>
-    </div>
-
-    <div class="stat-card active-card">
-      <div class="stat-icon">✓</div>
-      <div>
-        <p>Active Users</p>
-        <h2>{{ activeUsers }}</h2>
-        <span>Currently active accounts</span>
-      </div>
-    </div>
-
-    <div class="stat-card inactive-card">
-      <div class="stat-icon">⊘</div>
-      <div>
-        <p>Inactive Users</p>
-        <h2>{{ inactiveUsers }}</h2>
-        <span>Deactivated accounts</span>
-      </div>
-    </div>
 
   </div>
 
-  <div class="recent-users-section" *ngIf="!loading">
 
-    <div class="section-header">
-      <div>
-        <h2>Recent Users</h2>
-        <p>Latest registered user accounts</p>
-      </div>
+  <!-- Loading -->
+  <div
+    class="text-center py-5"
+    *ngIf="loading">
 
-      <a routerLink="/dashboard/users" class="view-all-link">
-        View All Users →
-      </a>
-    </div>
+    <div class="spinner-border text-primary mb-3"></div>
 
-    <div class="table-wrapper" *ngIf="recentUsers.length > 0">
-      <table>
-        <thead>
-          <tr>
-            <th>User ID</th>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          <tr *ngFor="let user of recentUsers">
-            <td>#{{ user.userId }}</td>
-            <td>{{ user.fullName }}</td>
-            <td>{{ user.email }}</td>
-            <td>
-              <span
-                class="status"
-                [class.status-active]="user.isActive"
-                [class.status-inactive]="!user.isActive">
-                {{ user.isActive ? 'Active' : 'Inactive' }}
-              </span>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="empty-state" *ngIf="recentUsers.length === 0">
-      No users found.
-    </div>
+    <p class="text-secondary mb-0">
+      Loading dashboard data...
+    </p>
 
   </div>
 
-  <div class="quick-actions">
-    <h2>Quick Actions</h2>
 
-    <div class="action-grid">
-      <a routerLink="/dashboard/all-school" class="action-card">
-        <span>🏫</span>
-        <div>
-          <h3>Manage Schools</h3>
-          <p>View and manage registered schools.</p>
+  <!-- Dashboard Content -->
+  <ng-container *ngIf="!loading">
+
+    <!-- Statistics Cards -->
+    <div class="row g-3 mb-4">
+
+      <!-- Total Schools -->
+      <div class="col-12 col-sm-6 col-xl-3">
+
+        <div class="card border-0 shadow-sm h-100">
+
+          <div class="card-body d-flex align-items-center gap-3">
+
+            <div class="rounded-3 bg-primary-subtle text-primary
+                        d-flex align-items-center justify-content-center
+                        flex-shrink-0"
+                 style="width: 55px; height: 55px;">
+
+              <i class="fa-solid fa-school fs-4"></i>
+
+            </div>
+
+            <div>
+              <p class="text-secondary small fw-semibold mb-1">
+                Total Schools
+              </p>
+
+              <h3 class="fw-bold mb-1">
+                {{ totalSchools }}
+              </h3>
+
+              <small class="text-secondary">
+                Registered schools
+              </small>
+            </div>
+
+          </div>
+
         </div>
-        <span class="arrow">→</span>
-      </a>
 
-      <a routerLink="/dashboard/users" class="action-card">
-        <span>👥</span>
-        <div>
-          <h3>Manage Users</h3>
-          <p>View users and manage account status.</p>
+      </div>
+
+
+      <!-- Total Users -->
+      <div class="col-12 col-sm-6 col-xl-3">
+
+        <div class="card border-0 shadow-sm h-100">
+
+          <div class="card-body d-flex align-items-center gap-3">
+
+            <div class="rounded-3 bg-info-subtle text-info
+                        d-flex align-items-center justify-content-center
+                        flex-shrink-0"
+                 style="width: 55px; height: 55px;">
+
+              <i class="fa-solid fa-users fs-4"></i>
+
+            </div>
+
+            <div>
+              <p class="text-secondary small fw-semibold mb-1">
+                Total Users
+              </p>
+
+              <h3 class="fw-bold mb-1">
+                {{ totalUsers }}
+              </h3>
+
+              <small class="text-secondary">
+                All registered users
+              </small>
+            </div>
+
+          </div>
+
         </div>
-        <span class="arrow">→</span>
-      </a>
+
+      </div>
+
+
+      <!-- Active Users -->
+      <div class="col-12 col-sm-6 col-xl-3">
+
+        <div class="card border-0 shadow-sm h-100">
+
+          <div class="card-body d-flex align-items-center gap-3">
+
+            <div class="rounded-3 bg-success-subtle text-success
+                        d-flex align-items-center justify-content-center
+                        flex-shrink-0"
+                 style="width: 55px; height: 55px;">
+
+              <i class="fa-solid fa-user-check fs-4"></i>
+
+            </div>
+
+            <div>
+              <p class="text-secondary small fw-semibold mb-1">
+                Active Users
+              </p>
+
+              <h3 class="fw-bold mb-1">
+                {{ activeUsers }}
+              </h3>
+
+              <small class="text-secondary">
+                Currently active accounts
+              </small>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- Inactive Users -->
+      <div class="col-12 col-sm-6 col-xl-3">
+
+        <div class="card border-0 shadow-sm h-100">
+
+          <div class="card-body d-flex align-items-center gap-3">
+
+            <div class="rounded-3 bg-danger-subtle text-danger
+                        d-flex align-items-center justify-content-center
+                        flex-shrink-0"
+                 style="width: 55px; height: 55px;">
+
+              <i class="fa-solid fa-user-slash fs-4"></i>
+
+            </div>
+
+            <div>
+              <p class="text-secondary small fw-semibold mb-1">
+                Inactive Users
+              </p>
+
+              <h3 class="fw-bold mb-1">
+                {{ inactiveUsers }}
+              </h3>
+
+              <small class="text-secondary">
+                Deactivated accounts
+              </small>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
     </div>
-  </div>
+
+
+    <!-- Recent Users -->
+    <div class="card border-0 shadow-sm mb-4">
+
+      <!-- Card Header -->
+      <div class="card-header bg-white border-0 p-3 p-md-4">
+
+        <div class="d-flex flex-wrap justify-content-between
+                    align-items-center gap-2">
+
+          <div>
+            <h5 class="fw-bold mb-1">
+              Recent Users
+            </h5>
+
+            <p class="text-secondary small mb-0">
+              Latest registered user accounts
+            </p>
+          </div>
+
+          <a
+            routerLink="/dashboard/users"
+            class="btn btn-outline-primary btn-sm">
+
+            View All Users
+            <i class="fa-solid fa-arrow-right ms-1"></i>
+
+          </a>
+
+        </div>
+
+      </div>
+
+
+      <!-- Users Table -->
+      <div class="card-body p-0">
+
+        <div
+          class="table-responsive"
+          *ngIf="recentUsers.length > 0">
+
+          <table class="table table-hover align-middle mb-0">
+
+            <thead class="table-light">
+
+              <tr>
+                <th class="px-3 py-3">User ID</th>
+                <th class="py-3">Name</th>
+                <th class="py-3">Email</th>
+                <th class="py-3">Status</th>
+              </tr>
+
+            </thead>
+
+            <tbody>
+
+              <tr *ngFor="let user of recentUsers">
+
+                <td class="px-3">
+                  #{{ user.userId }}
+                </td>
+
+                <td class="fw-semibold">
+                  {{ user.fullName }}
+                </td>
+
+                <td>
+                  {{ user.email }}
+                </td>
+
+                <td>
+
+                  <span
+                    class="badge rounded-pill"
+                    [ngClass]="user.isActive
+                      ? 'text-bg-success'
+                      : 'text-bg-danger'">
+
+                    {{ user.isActive ? 'Active' : 'Inactive' }}
+
+                  </span>
+
+                </td>
+
+              </tr>
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+
+        <!-- Empty State -->
+        <div
+          class="text-center py-5"
+          *ngIf="recentUsers.length === 0">
+
+          <i class="fa-solid fa-users text-secondary fs-1 mb-3"></i>
+
+          <p class="text-secondary mb-0">
+            No users found.
+          </p>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- Quick Actions -->
+    <div class="mb-4">
+
+      <h5 class="fw-bold mb-3">
+        Quick Actions
+      </h5>
+
+      <div class="row g-3">
+
+        <!-- Manage Schools -->
+        <div class="col-12 col-md-6">
+
+          <a
+            routerLink="/dashboard/all-school"
+            class="card border-0 shadow-sm text-decoration-none h-100 quick-action-card">
+
+            <div class="card-body d-flex align-items-center gap-3">
+
+              <div class="rounded-3 bg-primary-subtle text-primary
+                          d-flex align-items-center justify-content-center
+                          flex-shrink-0"
+                   style="width: 50px; height: 50px;">
+
+                <i class="fa-solid fa-school fs-4"></i>
+
+              </div>
+
+              <div class="flex-grow-1">
+
+                <h6 class="fw-bold text-dark mb-1">
+                  Manage Schools
+                </h6>
+
+                <p class="text-secondary small mb-0">
+                  View and manage registered schools.
+                </p>
+
+              </div>
+
+              <i class="fa-solid fa-arrow-right text-primary"></i>
+
+            </div>
+
+          </a>
+
+        </div>
+
+
+        <!-- Manage Users -->
+        <div class="col-12 col-md-6">
+
+          <a
+            routerLink="/dashboard/users"
+            class="card border-0 shadow-sm text-decoration-none h-100 quick-action-card">
+
+            <div class="card-body d-flex align-items-center gap-3">
+
+              <div class="rounded-3 bg-info-subtle text-info
+                          d-flex align-items-center justify-content-center
+                          flex-shrink-0"
+                   style="width: 50px; height: 50px;">
+
+                <i class="fa-solid fa-users fs-4"></i>
+
+              </div>
+
+              <div class="flex-grow-1">
+
+                <h6 class="fw-bold text-dark mb-1">
+                  Manage Users
+                </h6>
+
+                <p class="text-secondary small mb-0">
+                  View users and manage account status.
+                </p>
+
+              </div>
+
+              <i class="fa-solid fa-arrow-right text-primary"></i>
+
+            </div>
+
+          </a>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </ng-container>
 
 </div>

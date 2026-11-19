@@ -1,0 +1,107 @@
+<div class="container-fluid p-0">
+  <div class="d-flex min-vh-100">
+
+    <!-- Sidebar -->
+    <aside class="sidebar bg-dark text-white d-flex flex-column">
+
+      <!-- Brand -->
+      <div class="sidebar-brand p-3 border-bottom border-secondary">
+        <div class="d-flex align-items-center gap-2">
+          <i class="fa-solid fa-school fs-4 text-primary"></i>
+          <span class="fw-bold fs-5 brand-text">School Management</span>
+        </div>
+        <small class="text-secondary brand-text">Super Admin Panel</small>
+      </div>
+
+      <!-- Navigation -->
+      <div class="flex-grow-1 overflow-auto p-2">
+
+        <div *ngIf="loading" class="text-center py-4">
+          <div class="spinner-border spinner-border-sm text-light" role="status"></div>
+          <span class="ms-2 small menu-text">Loading menu...</span>
+        </div>
+
+        <div *ngIf="errorMessage" class="alert alert-danger py-2 small">
+          {{ errorMessage }}
+        </div>
+
+        <ul class="nav nav-pills flex-column gap-1" *ngIf="!loading">
+
+          <ng-container *ngFor="let menu of menus">
+
+            <!-- Menu with child menus -->
+            <li class="nav-item" *ngIf="menu.childMenus?.length">
+
+              <button type="button" class="nav-link w-100 text-start d-flex align-items-center justify-content-between"
+                [class.expanded]="isExpanded(menu.navigationMenuId)" 
+                (click)="toggleMenu(menu.navigationMenuId)">
+
+                <span class="d-flex align-items-center gap-3">
+                  <i [ngClass]="menu.icon"></i>
+                  <span class="menu-text">{{ menu.title }}</span>
+                </span>
+
+                <i class="fa-solid fa-chevron-down small menu-text"
+                  [class.rotate-icon]="isExpanded(menu.navigationMenuId)">
+                </i>
+
+              </button>
+
+              <!-- Submenus -->
+              <ul class="nav flex-column submenu mt-1" *ngIf="isExpanded(menu.navigationMenuId)">
+
+                <li class="nav-item" *ngFor="let child of menu.childMenus">
+
+                  <a class="nav-link d-flex align-items-center gap-3" [routerLink]="child.route"
+                    routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" [title]="child.title">
+
+                    <i [ngClass]="child.icon"></i>
+                    <span class="menu-text">{{ child.title }}</span>
+
+                  </a>
+
+                </li>
+              </ul>
+            </li>
+
+            <!-- Menu without child menus -->
+            <li class="nav-item" *ngIf="!menu.childMenus?.length">
+
+              <a class="nav-link d-flex align-items-center gap-3" [routerLink]="menu.route" routerLinkActive="active"
+                [routerLinkActiveOptions]="{ exact: true }" [title]="menu.title">
+
+                <i [ngClass]="menu.icon || 'fa-solid fa-circle'"></i>
+                <span class="menu-text">{{ menu.title }}</span>
+
+              </a>
+
+            </li>
+
+          </ng-container>
+        </ul>
+      </div>
+
+      <!-- Logout -->
+      <div class="sidebar-footer p-3 border-top border-secondary">
+        <button type="button" class="btn btn-outline-light w-100 d-flex align-items-center justify-content-center gap-2"
+          (click)="logout()">
+
+          <i class="fa-solid fa-right-from-bracket"></i>
+          <span class="menu-text">Logout</span>
+
+        </button>
+      </div>
+
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content flex-grow-1 bg-light">
+
+      <div class="content-wrapper p-3 p-md-4">
+        <router-outlet></router-outlet>
+      </div>
+
+    </main>
+
+  </div>
+</div>

@@ -166,7 +166,8 @@ export class Teachers implements OnInit {
     // Apply Update DTO full name validation
     this.teacherForm.get('fullName')?.setValidators([
       Validators.required,
-      Validators.pattern(/^[A-Za-z]{2,}(?: [A-Za-z]{2,})+$/)
+      Validators.minLength(4),
+      Validators.maxLength(30)
     ]);
 
     this.teacherForm.get('fullName')?.updateValueAndValidity();

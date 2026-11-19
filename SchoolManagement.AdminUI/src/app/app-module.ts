@@ -23,6 +23,8 @@ import { Roles } from './roles/roles';
 import { NotFound } from './not-found/not-found';
 import { Teachers } from './teachers/teachers';
 import { Students } from './students/students';
+import { SchoolAdminLayout } from './layouts/school-admin-layout/school-admin-layout';
+import { SchoolAdminDashboard } from './pages/school-admin-dashboard/school-admin-dashboard';
 
 @NgModule({
   declarations: [
@@ -36,6 +38,8 @@ import { Students } from './students/students';
     NotFound,
     Teachers,
     Students,
+    SchoolAdminLayout,
+    SchoolAdminDashboard,
   ],
   imports: [BrowserModule, AppRoutingModule, ReactiveFormsModule, FormsModule],
   providers: [

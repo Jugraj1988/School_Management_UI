@@ -1,0 +1,249 @@
+<div class="dashboard-container">
+
+  <!-- Header -->
+  <div class="dashboard-header">
+
+    <div>
+      <h1>Dashboard</h1>
+      <p>Welcome to your School Management Admin Panel.</p>
+    </div>
+
+    <button
+      class="refresh-btn"
+      type="button"
+      (click)="loadDashboard()"
+      [disabled]="loading">
+
+      <span *ngIf="!loading">↻ Refresh</span>
+      <span *ngIf="loading">Loading...</span>
+
+    </button>
+
+  </div>
+
+
+  <!-- Error -->
+  <div
+    class="error-message"
+    *ngIf="errorMessage">
+
+    {{ errorMessage }}
+
+  </div>
+
+
+  <!-- Loading -->
+  <div
+    class="loading-message"
+    *ngIf="loading">
+
+    Loading dashboard data...
+
+  </div>
+
+
+  <!-- Statistics -->
+  <div
+    class="stats-grid"
+    *ngIf="!loading">
+
+    <!-- Total Teachers -->
+    <div class="stat-card teachers-card">
+
+      <div class="stat-icon">
+        👨‍🏫
+      </div>
+
+      <div>
+        <p>Total Teachers</p>
+        <h2>{{ totalTeachers }}</h2>
+        <span>Teachers in your school</span>
+      </div>
+
+    </div>
+
+
+    <!-- Total Students -->
+    <div class="stat-card students-card">
+
+      <div class="stat-icon">
+        🎓
+      </div>
+
+      <div>
+        <p>Total Students</p>
+        <h2>{{ totalStudents }}</h2>
+        <span>Students in your school</span>
+      </div>
+
+    </div>
+
+
+    <!-- Active Teachers -->
+    <div class="stat-card active-card">
+
+      <div class="stat-icon">
+        ✓
+      </div>
+
+      <div>
+        <p>Active Teachers</p>
+        <h2>{{ activeTeachers }}</h2>
+        <span>Currently active teachers</span>
+      </div>
+
+    </div>
+
+
+    <!-- Active Students -->
+    <div class="stat-card students-active-card">
+
+      <div class="stat-icon">
+        ✓
+      </div>
+
+      <div>
+        <p>Active Students</p>
+        <h2>{{ activeStudents }}</h2>
+        <span>Currently active students</span>
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- Recent Students -->
+  <div
+    class="recent-users-section"
+    *ngIf="!loading">
+
+    <div class="section-header">
+
+      <div>
+        <h2>Recent Students</h2>
+        <p>Latest registered students in your school</p>
+      </div>
+
+      <a
+        routerLink="/school-admin/all-students"
+        class="view-all-link">
+
+        View All Students →
+
+      </a>
+
+    </div>
+
+
+    <!-- Students Table -->
+    <div
+      class="table-wrapper"
+      *ngIf="recentStudents.length > 0">
+
+      <table>
+
+        <thead>
+          <tr>
+            <th>Student ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+          <tr *ngFor="let student of recentStudents">
+
+            <td>
+              #{{ student.studentId }}
+            </td>
+
+            <td>
+              {{ student.fullName }}
+            </td>
+
+            <td>
+              {{ student.email }}
+            </td>
+
+            <td>
+
+              <span
+                class="status"
+                [class.status-active]="student.isActive"
+                [class.status-inactive]="!student.isActive">
+
+                {{ student.isActive ? 'Active' : 'Inactive' }}
+
+              </span>
+
+            </td>
+
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+
+    <!-- Empty State -->
+    <div
+      class="empty-state"
+      *ngIf="recentStudents.length === 0">
+
+      No students found.
+
+    </div>
+
+  </div>
+
+
+  <!-- Quick Actions -->
+  <div class="quick-actions">
+
+    <h2>Quick Actions</h2>
+
+    <div class="action-grid">
+
+      <!-- Teachers -->
+      <a
+        routerLink="/school-admin/all-teachers"
+        class="action-card">
+
+        <span>👨‍🏫</span>
+
+        <div>
+          <h3>Manage Teachers</h3>
+          <p>View and manage teachers in your school.</p>
+        </div>
+
+        <span class="arrow">→</span>
+
+      </a>
+
+
+      <!-- Students -->
+      <a
+        routerLink="/school-admin/all-students"
+        class="action-card">
+
+        <span>🎓</span>
+
+        <div>
+          <h3>Manage Students</h3>
+          <p>View and manage students in your school.</p>
+        </div>
+
+        <span class="arrow">→</span>
+
+      </a>
+
+    </div>
+
+  </div>
+
+</div>

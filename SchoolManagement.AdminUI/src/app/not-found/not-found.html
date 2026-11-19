@@ -1,32 +1,60 @@
-<div class="not-found-container">
-  <div class="not-found-card">
+<div class="container-fluid min-vh-100 d-flex align-items-center justify-content-center bg-light p-3">
 
-    <div class="error-code">404</div>
+  <div class="card border-0 shadow-lg rounded-4 text-center"
+       style="max-width: 550px; width: 100%;">
 
-    <div class="error-icon">🔍</div>
+    <div class="card-body p-4 p-md-5">
 
-    <h1>Page Not Found</h1>
+      <!-- Error Code -->
+      <h1 class="display-1 fw-bold text-primary mb-0">
+        404
+      </h1>
 
-    <p>
-      Sorry, the page you're looking for doesn't exist
-      or may have been moved.
-    </p>
+      <!-- Icon -->
+      <div class="my-3">
+        <i class="fa-solid fa-magnifying-glass text-secondary"
+           style="font-size: 65px;">
+        </i>
+      </div>
 
-    <div class="button-group">
-      <button
-        class="btn-primary"
-        type="button"
-        (click)="goToDashboard()">
-        Go to Dashboard
-      </button>
+      <!-- Heading -->
+      <h2 class="fw-bold text-dark mb-3">
+        Page Not Found
+      </h2>
 
-      <button
-        class="btn-secondary"
-        type="button"
-        (click)="goToLogin()">
-        Back to Login
-      </button>
+      <!-- Description -->
+      <p class="text-secondary mb-4">
+        Sorry, the page you're looking for doesn't exist
+        or may have been moved.
+      </p>
+
+      <!-- Buttons -->
+      <div class="d-flex flex-column flex-sm-row justify-content-center gap-2">
+
+        <button
+          class="btn btn-primary px-4"
+          type="button"
+          (click)="goToDashboard()">
+
+          <i class="fa-solid fa-house me-2"></i>
+          Go to Dashboard
+
+        </button>
+
+        <button
+          class="btn btn-outline-secondary px-4"
+          type="button"
+          (click)="goToLogin()">
+
+          <i class="fa-solid fa-arrow-left me-2"></i>
+          Back to Login
+
+        </button>
+
+      </div>
+
     </div>
 
   </div>
+
 </div>

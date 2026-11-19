@@ -52,45 +52,43 @@ export class LoginComponent {
         })
       )
       .subscribe({
-        next: response => {
-          if (!response?.user) {
-            this.errorMessage = 'Invalid login response.';
-            this.cdr.detectChanges();
-            return;
-          }
+       next: response => {
 
-          if (!response.user.isActive) {
-            this.authService.logout();
-            this.errorMessage = 'Your account is inactive.';
-            this.cdr.detectChanges();
-            return;
-          }
+  console.log('Login response:', response);
 
-          const roleName =
-            response.user.roleName?.trim().toLowerCase();
+  if (!response?.user) {
+    this.errorMessage = 'Invalid login response.';
+    return;
+  }
 
-          if (roleName === 'super admin') {
-            this.router.navigate(['/dashboard']);
-            return;
-          }
+  if (!response.user.isActive) {
+    this.authService.logout();
+    this.errorMessage = 'Your account is inactive.';
+    return;
+  }
 
-          this.authService.logout();
+  const roleName = response.user.roleName?.trim().toLowerCase();
 
-          this.errorMessage =
-            roleName === 'school admin'
-              ? 'This application is for Super Admin users only.'
-              : 'You do not have permission to access this application.';
+  console.log('Logged-in role:', roleName);
 
-          this.cdr.detectChanges();
-        },
+  if (roleName === 'super admin') {
+    this.router.navigate(['/dashboard']);
+  }
+  else if (roleName === 'school admin') {
+    this.router.navigate(['/school-admin/dashboard']);
+  }
+  else if (roleName === 'teacher') {
+    this.router.navigate(['/teacher/dashboard']);
+  }
+  else {
+    this.errorMessage = `Invalid user role: ${response.user.roleName}`;
+  }
 
-        error: error => {
-          this.errorMessage =
-            error?.error?.Message ||
-            error?.error?.message ||
-            error?.error?.title ||
-            'Login failed. Please check your credentials.';
-
+  this.cdr.detectChanges();
+},
+        error: err => {
+          console.error('Login error:', err);
+          this.errorMessage = 'Login failed. Please check your credentials.';
           this.cdr.detectChanges();
         }
       });

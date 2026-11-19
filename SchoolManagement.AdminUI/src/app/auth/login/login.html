@@ -1,55 +1,159 @@
+<div class="container-fluid min-vh-100 d-flex align-items-center justify-content-center bg-light py-4">
 
-<div class="login-container">
-  <div class="login-card">
-    <h1>School Management</h1>
-    <p>Super Admin Portal</p>
+  <div class="card border-0 shadow-lg rounded-4"
+       style="width: 100%; max-width: 430px;">
 
-    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-      <label for="email">Email</label>
+    <div class="card-body p-4 p-md-5">
 
-      <input
-        id="email"
-        type="email"
-        formControlName="email"
-        placeholder="Enter your email"
-      />
+      <!-- Header -->
+      <div class="text-center mb-4">
 
-      <small
-        *ngIf="
-          loginForm.controls.email.touched &&
-          loginForm.controls.email.invalid
-        ">
-        Please enter a valid email address.
-      </small>
+        <div class="mb-3">
+          <i class="fa-solid fa-school text-primary"
+             style="font-size: 48px;">
+          </i>
+        </div>
 
-      <label for="password">Password</label>
+        <h2 class="fw-bold text-dark mb-2">
+          School Management
+        </h2>
 
-      <input
-        id="password"
-        type="password"
-        formControlName="password"
-        placeholder="Enter your password"
-      />
+        <!-- <p class="text-secondary mb-0">
+          Super Admin Portal
+        </p> -->
 
-      <small
-        *ngIf="
-          loginForm.controls.password.touched &&
-          loginForm.controls.password.invalid
-        ">
-        Password is required.
-      </small>
+      </div>
 
-      <p class="error" *ngIf="errorMessage" role="alert">
-        {{ errorMessage }}
-      </p>
 
-      <p class="success" *ngIf="successMessage">
-        {{ successMessage }}
-      </p>
+      <!-- Login Form -->
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
 
-      <button type="submit" [disabled]="loading">
-        {{ loading ? 'Signing in...' : 'Login' }}
-      </button>
-    </form>
+        <!-- Email -->
+        <div class="mb-3">
+
+          <label for="email" class="form-label fw-semibold">
+            Email Address
+          </label>
+
+          <div class="input-group">
+
+            <span class="input-group-text bg-light">
+              <i class="fa-solid fa-envelope text-secondary"></i>
+            </span>
+
+            <input
+              id="email"
+              type="email"
+              class="form-control"
+              formControlName="email"
+              placeholder="Enter your email"
+              [class.is-invalid]="loginForm.controls.email.touched && loginForm.controls.email.invalid"
+            />
+
+          </div>
+
+          <div
+            class="invalid-feedback d-block"
+            *ngIf="loginForm.controls.email.touched && loginForm.controls.email.invalid">
+
+            Please enter a valid email address.
+
+          </div>
+
+        </div>
+
+
+        <!-- Password -->
+        <div class="mb-3">
+
+          <label for="password" class="form-label fw-semibold">
+            Password
+          </label>
+
+          <div class="input-group">
+
+            <span class="input-group-text bg-light">
+              <i class="fa-solid fa-lock text-secondary"></i>
+            </span>
+
+            <input
+              id="password"
+              type="password"
+              class="form-control"
+              formControlName="password"
+              placeholder="Enter your password"
+              [class.is-invalid]="loginForm.controls.password.touched && loginForm.controls.password.invalid"
+            />
+
+          </div>
+
+          <div
+            class="invalid-feedback d-block"
+            *ngIf="loginForm.controls.password.touched && loginForm.controls.password.invalid">
+
+            Password is required.
+
+          </div>
+
+        </div>
+
+
+        <!-- Error Message -->
+        <div
+          class="alert alert-danger py-2"
+          role="alert"
+          *ngIf="errorMessage">
+
+          <i class="fa-solid fa-circle-exclamation me-2"></i>
+          {{ errorMessage }}
+
+        </div>
+
+
+        <!-- Success Message -->
+        <div
+          class="alert alert-success py-2"
+          *ngIf="successMessage">
+
+          <i class="fa-solid fa-circle-check me-2"></i>
+          {{ successMessage }}
+
+        </div>
+
+
+        <!-- Login Button -->
+        <div class="d-grid mt-4">
+
+          <button
+            type="submit"
+            class="btn btn-primary btn-lg fw-semibold"
+            [disabled]="loading">
+
+            <span
+              *ngIf="loading"
+              class="spinner-border spinner-border-sm me-2">
+            </span>
+
+            {{ loading ? 'Signing in...' : 'Login' }}
+
+          </button>
+
+        </div>
+
+      </form>
+
+
+      <!-- Footer -->
+      <div class="text-center mt-4">
+
+        <small class="text-secondary">
+          School Management System
+        </small>
+
+      </div>
+
+    </div>
+
   </div>
+
 </div>
