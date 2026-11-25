@@ -17,6 +17,12 @@ import { NotFound } from './not-found/not-found';
 
 import { SchoolAdminLayout } from './layouts/school-admin-layout/school-admin-layout';
 import { SchoolAdminDashboard } from './pages/school-admin-dashboard/school-admin-dashboard';
+import { TeacherDashboard } from './features/teacher/teacher-dashboard/teacher-dashboard';
+import { TeacherLayout } from './features/teacher/teacher-layout/teacher-layout';
+import { TeacherStudents } from './features/teacher/teacher-students/teacher-students';
+import { MyClasses } from './teacher/my-classes/my-classes';
+import { Attendance } from './teacher/attendance/attendance';
+import { AttendanceHistory } from './teacher/attendance-history/attendance-history';
 
 const routes: Routes = [
 
@@ -79,6 +85,10 @@ const routes: Routes = [
         path: 'users',
         component: Users
       },
+      {
+  path: 'attendance-history',
+  component: AttendanceHistory
+},
 
       {
         path: '',
@@ -88,6 +98,35 @@ const routes: Routes = [
 
     ]
   },
+
+  {
+  path: 'teacher',
+  component: TeacherLayout,
+  canActivate: [authGuard, roleGuard],
+  data: { role: 'Teacher' },
+  children: [
+    {
+      path: 'dashboard',
+      component: TeacherDashboard
+    },
+    {
+      path: 'my-students',
+      component: TeacherStudents
+    },
+    {
+  path: 'my-classes',
+  component: MyClasses
+},
+  {
+  path: 'mark-attendance',
+  component: Attendance
+},
+{
+  path: 'attendance-history',
+  component: AttendanceHistory
+}
+  ]
+},
 
   // Default route
   {

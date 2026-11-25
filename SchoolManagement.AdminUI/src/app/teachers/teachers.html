@@ -12,7 +12,7 @@
     <button
       type="button"
       class="btn btn-primary"
-      *ngIf="!showForm"
+      *ngIf="!showForm && !showAssignmentPanel"
       (click)="openAddForm()">
       <i class="fa-solid fa-plus me-2"></i>
       Add Teacher
@@ -32,7 +32,10 @@
     {{ errorMessage }}
   </div>
 
-  <!-- Add / Edit Teacher Form -->
+  <!-- ====================================== -->
+  <!-- ADD / EDIT TEACHER FORM -->
+  <!-- ====================================== -->
+
   <div class="card border-0 shadow-sm mb-4" *ngIf="showForm">
 
     <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
@@ -59,6 +62,7 @@
 
           <!-- Full Name -->
           <div class="col-md-6">
+
             <label class="form-label fw-semibold">Full Name *</label>
 
             <input
@@ -81,10 +85,12 @@
               *ngIf="f['fullName'].touched && f['fullName'].errors?.['pattern']">
               Enter at least two words using letters.
             </small>
+
           </div>
 
           <!-- Email -->
           <div class="col-md-6">
+
             <label class="form-label fw-semibold">Email *</label>
 
             <input
@@ -102,10 +108,12 @@
               *ngIf="f['email'].touched && f['email'].errors?.['email']">
               Enter a valid email address.
             </small>
+
           </div>
 
           <!-- Phone -->
           <div class="col-md-6">
+
             <label class="form-label fw-semibold">Phone Number *</label>
 
             <input
@@ -124,10 +132,12 @@
               *ngIf="f['phoneNumber'].touched && f['phoneNumber'].errors?.['pattern']">
               Enter a valid 10–12 digit phone number.
             </small>
+
           </div>
 
           <!-- Address -->
           <div class="col-md-6">
+
             <label class="form-label fw-semibold">Address</label>
 
             <input
@@ -136,10 +146,12 @@
               formControlName="address"
               maxlength="100"
               placeholder="Enter address">
+
           </div>
 
           <!-- Qualification -->
           <div class="col-md-6">
+
             <label class="form-label fw-semibold">Qualification</label>
 
             <input
@@ -147,10 +159,12 @@
               class="form-control"
               formControlName="qualification"
               placeholder="e.g. M.Sc, B.Ed">
+
           </div>
 
           <!-- Password -->
           <div class="col-md-6" *ngIf="!isEditMode">
+
             <label class="form-label fw-semibold">Password *</label>
 
             <input
@@ -169,6 +183,7 @@
               *ngIf="f['password'].touched && f['password'].errors?.['maxlength']">
               Password cannot exceed 12 characters.
             </small>
+
           </div>
 
         </div>
@@ -188,8 +203,15 @@
             class="btn btn-primary"
             [disabled]="teacherForm.invalid || saving">
 
-            <span *ngIf="saving" class="spinner-border spinner-border-sm me-2"></span>
-            <i *ngIf="!saving" class="fa-solid fa-floppy-disk me-2"></i>
+            <span
+              *ngIf="saving"
+              class="spinner-border spinner-border-sm me-2">
+            </span>
+
+            <i
+              *ngIf="!saving"
+              class="fa-solid fa-floppy-disk me-2">
+            </i>
 
             {{ saving ? 'Saving...' : (isEditMode ? 'Update Teacher' : 'Save Teacher') }}
 
@@ -202,17 +224,219 @@
     </div>
   </div>
 
-  <!-- Teacher Listing -->
-  <div class="card border-0 shadow-sm" *ngIf="!showForm">
+
+  <!-- ====================================== -->
+  <!-- TEACHER CLASS ASSIGNMENT PANEL -->
+  <!-- ====================================== -->
+
+  <div class="card border-0 shadow-sm mb-4" *ngIf="showAssignmentPanel">
+
+    <!-- Assignment Header -->
+    <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+
+      <div>
+
+        <h5 class="fw-bold mb-1">
+          <i class="fa-solid fa-book-open text-primary me-2"></i>
+          Assign Classes
+        </h5>
+
+        <small class="text-secondary">
+          Teacher: {{ selectedTeacher?.fullName }}
+        </small>
+
+      </div>
+
+      <button
+        type="button"
+        class="btn-close"
+        aria-label="Close"
+        (click)="closeAssignmentPanel()">
+      </button>
+
+    </div>
+
+    <div class="card-body p-3 p-md-4">
+
+      <!-- Assignment Loading -->
+      <div *ngIf="assignmentLoading" class="text-center py-4">
+
+        <div class="spinner-border text-primary"></div>
+
+        <p class="text-secondary mt-2 mb-0">
+          Loading classes...
+        </p>
+
+      </div>
+
+      <div *ngIf="!assignmentLoading">
+
+        <!-- Available Classes -->
+        <div class="mb-4">
+
+          <h6 class="fw-bold mb-3">
+            <i class="fa-solid fa-list-check me-2 text-primary"></i>
+            Available Classes
+          </h6>
+
+          <div
+            class="row g-3"
+            *ngIf="availableClasses.length > 0; else noClasses">
+
+            <div
+              class="col-sm-6 col-md-4 col-lg-3"
+              *ngFor="let schoolClass of availableClasses">
+
+              <label
+                class="border rounded p-3 d-flex align-items-center gap-2 h-100"
+                [class.bg-light]="isClassAssigned(schoolClass.id)">
+
+                <input
+                  type="checkbox"
+                  class="form-check-input mt-0 flex-shrink-0"
+                  [checked]="selectedClassIds.includes(schoolClass.id)"
+                  [disabled]="isClassAssigned(schoolClass.id)"
+                  (change)="toggleClassSelection(
+                    schoolClass.id,
+                    $any($event.target).checked
+                  )">
+
+                <span>
+
+                  <span class="fw-semibold d-block">
+                    {{ schoolClass.grade }}
+                  </span>
+
+                  <small class="text-secondary">
+                    Section {{ schoolClass.section }}
+                  </small>
+
+                  <small
+                    class="text-success d-block"
+                    *ngIf="isClassAssigned(schoolClass.id)">
+                    <i class="fa-solid fa-check-circle me-1"></i>
+                    Already Assigned
+                  </small>
+
+                </span>
+
+              </label>
+
+            </div>
+
+          </div>
+
+          <ng-template #noClasses>
+
+            <div class="alert alert-warning mb-0">
+              <i class="fa-solid fa-circle-info me-2"></i>
+              No classes available in your school.
+            </div>
+
+          </ng-template>
+
+        </div>
+
+        <!-- Save Assignment -->
+        <div class="d-flex flex-wrap gap-2 mb-4">
+
+          <button
+            type="button"
+            class="btn btn-primary"
+            [disabled]="
+              assignmentSaving ||
+              selectedClassIds.length === 0 ||
+              availableClasses.length === 0
+            "
+            (click)="saveClassAssignments()">
+
+            <span
+              *ngIf="assignmentSaving"
+              class="spinner-border spinner-border-sm me-2">
+            </span>
+
+            <i
+              *ngIf="!assignmentSaving"
+              class="fa-solid fa-floppy-disk me-2">
+            </i>
+
+            {{ assignmentSaving ? 'Saving...' : 'Save Assignment' }}
+
+          </button>
+
+          <button
+            type="button"
+            class="btn btn-outline-secondary"
+            (click)="closeAssignmentPanel()">
+            Close
+          </button>
+
+        </div>
+
+        <hr>
+
+        <!-- Existing Assignments -->
+      <h6 class="mt-4 mb-3">Assigned Classes</h6>
+
+<div class="table-responsive">
+  <table class="table table-bordered table-hover align-middle">
+    <thead class="table-light">
+      <tr>
+        <th>Grade</th>
+        <th>Section</th>
+        <th style="width: 120px;">Action</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let assignment of assignedClasses">
+        <td>{{ assignment.grade }}</td>
+        <td>{{ assignment.section }}</td>
+        <td>
+          <button
+            type="button"
+            class="btn btn-sm btn-danger"
+            (click)="removeClassAssignment(assignment.id)">
+            <i class="fas fa-trash"></i> Remove
+          </button>
+        </td>
+      </tr>
+
+      <tr *ngIf="assignedClasses.length === 0">
+        <td colspan="3" class="text-center text-muted">
+          No classes assigned yet.
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- ====================================== -->
+  <!-- TEACHER LISTING -->
+  <!-- ====================================== -->
+
+  <div
+    class="card border-0 shadow-sm"
+    *ngIf="!showForm && !showAssignmentPanel">
 
     <!-- Toolbar -->
     <div class="card-header bg-white p-3">
 
       <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
 
-        <h5 class="fw-bold mb-0">All Teachers</h5>
+        <h5 class="fw-bold mb-0">
+          All Teachers
+        </h5>
 
         <div class="input-group search-box">
+
           <span class="input-group-text bg-white">
             <i class="fa-solid fa-search text-secondary"></i>
           </span>
@@ -223,23 +447,33 @@
             [(ngModel)]="searchText"
             (input)="searchTeachers()"
             placeholder="Search teachers...">
+
         </div>
 
       </div>
+
     </div>
 
     <!-- Loading -->
     <div *ngIf="loading" class="text-center py-5">
+
       <div class="spinner-border text-primary"></div>
-      <p class="text-secondary mt-2 mb-0">Loading teachers...</p>
+
+      <p class="text-secondary mt-2 mb-0">
+        Loading teachers...
+      </p>
+
     </div>
 
     <!-- Teacher Table -->
     <div class="table-responsive" *ngIf="!loading">
 
-      <table class="table table-hover align-middle mb-0" *ngIf="filteredTeachers.length > 0; else noTeachers">
+      <table
+        class="table table-hover align-middle mb-0"
+        *ngIf="filteredTeachers.length > 0; else noTeachers">
 
         <thead class="table-light">
+
           <tr>
             <th>#</th>
             <th>Teacher Name</th>
@@ -249,6 +483,7 @@
             <th>Status</th>
             <th>Actions</th>
           </tr>
+
         </thead>
 
         <tbody>
@@ -256,49 +491,81 @@
           <tr *ngFor="let teacher of filteredTeachers; let i = index">
 
             <td>{{ i + 1 }}</td>
-            <td class="fw-semibold">{{ teacher.fullName }}</td>
+
+            <td class="fw-semibold">
+              {{ teacher.fullName }}
+            </td>
+
             <td>{{ teacher.email }}</td>
+
             <td>{{ teacher.phoneNumber }}</td>
+
             <td>{{ teacher.qualification || '-' }}</td>
 
             <td>
+
               <span
                 class="badge"
                 [ngClass]="teacher.isActive ? 'text-bg-success' : 'text-bg-danger'">
+
                 {{ teacher.isActive ? 'Active' : 'Inactive' }}
+
               </span>
+
             </td>
 
             <td>
+
               <div class="d-flex gap-1">
 
+                <!-- Edit -->
                 <button
                   type="button"
                   class="btn btn-sm btn-outline-primary"
                   title="Edit Teacher"
                   (click)="editTeacher(teacher)">
+
                   <i class="fa-solid fa-pen"></i>
+
                 </button>
 
+                <!-- Assign Classes -->
+                <button
+                  type="button"
+                  class="btn btn-sm btn-outline-primary"
+                  title="Assign Classes"
+                  (click)="openAssignmentPanel(teacher)">
+
+                  <i class="fa-solid fa-book-open"></i>
+
+                </button>
+
+                <!-- Deactivate -->
                 <button
                   type="button"
                   *ngIf="teacher.isActive"
                   class="btn btn-sm btn-outline-danger"
                   title="Deactivate Teacher"
                   (click)="deactivateTeacher(teacher.teacherId)">
+
                   <i class="fa-solid fa-user-slash"></i>
+
                 </button>
 
+                <!-- Activate -->
                 <button
                   type="button"
                   *ngIf="!teacher.isActive"
                   class="btn btn-sm btn-outline-success"
                   title="Activate Teacher"
                   (click)="activateTeacher(teacher.teacherId)">
+
                   <i class="fa-solid fa-user-check"></i>
+
                 </button>
 
               </div>
+
             </td>
 
           </tr>
@@ -309,11 +576,21 @@
 
       <!-- Empty State -->
       <ng-template #noTeachers>
+
         <div class="text-center py-5">
+
           <i class="fa-solid fa-chalkboard-user fs-1 text-secondary"></i>
-          <h5 class="mt-3">No teachers found</h5>
-          <p class="text-secondary mb-0">There are no teachers matching your search.</p>
+
+          <h5 class="mt-3">
+            No teachers found
+          </h5>
+
+          <p class="text-secondary mb-0">
+            There are no teachers matching your search.
+          </p>
+
         </div>
+
       </ng-template>
 
     </div>

@@ -5,6 +5,7 @@ import {
 } from '@angular/core';
 
 import { BrowserModule } from '@angular/platform-browser';
+import { DatePipe } from '@angular/common';
 
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 
@@ -25,6 +26,12 @@ import { Teachers } from './teachers/teachers';
 import { Students } from './students/students';
 import { SchoolAdminLayout } from './layouts/school-admin-layout/school-admin-layout';
 import { SchoolAdminDashboard } from './pages/school-admin-dashboard/school-admin-dashboard';
+import { TeacherDashboard } from './features/teacher/teacher-dashboard/teacher-dashboard';
+import { TeacherLayout } from './features/teacher/teacher-layout/teacher-layout';
+import { TeacherStudents } from './features/teacher/teacher-students/teacher-students';
+import { MyClasses } from './teacher/my-classes/my-classes';
+import { Attendance } from './teacher/attendance/attendance';
+import { AttendanceHistory } from './teacher/attendance-history/attendance-history';
 
 @NgModule({
   declarations: [
@@ -40,8 +47,14 @@ import { SchoolAdminDashboard } from './pages/school-admin-dashboard/school-admi
     Students,
     SchoolAdminLayout,
     SchoolAdminDashboard,
+    TeacherDashboard,
+    TeacherLayout,
+    TeacherStudents,
+    MyClasses,
+    Attendance,
+    AttendanceHistory,
   ],
-  imports: [BrowserModule, AppRoutingModule, ReactiveFormsModule, FormsModule],
+  imports: [BrowserModule, AppRoutingModule, ReactiveFormsModule, FormsModule, DatePipe],
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideZoneChangeDetection(),

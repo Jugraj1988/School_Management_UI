@@ -3,6 +3,8 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TeacherService } from '../core/services/teacher-services';
 import { finalize } from 'rxjs/operators';
+import { SchoolClassService } from '../core/services/school-class';
+import { TeacherClassService } from '../core/services/teacher-class-service';
 
 @Component({
   selector: 'app-teachers',
@@ -14,6 +16,17 @@ export class Teachers implements OnInit {
 
   teachers: any[] = [];
   filteredTeachers: any[] = [];
+  showAssignmentPanel = false;
+
+selectedTeacher: any = null;
+
+availableClasses: any[] = [];
+assignedClasses: any[] = [];
+
+selectedClassIds: number[] = [];
+
+assignmentLoading = false;
+assignmentSaving = false;
 
   teacherForm!: FormGroup;
 
@@ -31,10 +44,12 @@ export class Teachers implements OnInit {
   successMessage = '';
 
   constructor(
-    private fb: FormBuilder,
-    private teacherService: TeacherService,
-     private cdr: ChangeDetectorRef
-  ) {}
+  private fb: FormBuilder,
+  private teacherService: TeacherService,
+  private schoolClassService: SchoolClassService,
+  private teacherClassService: TeacherClassService,
+  private cdr: ChangeDetectorRef
+) {}
 
   ngOnInit(): void {
     this.initializeForm();
@@ -291,6 +306,136 @@ export class Teachers implements OnInit {
     this.teacherForm.reset();
     this.errorMessage = '';
   }
+
+  // Open Assignment Panel
+openAssignmentPanel(teacher: any): void {
+  this.selectedTeacher = teacher;
+  this.showAssignmentPanel = true;
+
+  this.availableClasses = [];
+  this.assignedClasses = [];
+  this.selectedClassIds = [];
+
+  this.errorMessage = '';
+  this.successMessage = '';
+
+  this.loadAvailableClasses();
+  this.loadAssignedClasses();
+}
+
+// Load All School Classes
+loadAvailableClasses(): void {
+  this.assignmentLoading = true;
+
+  this.schoolClassService.getAllClasses().subscribe({
+    next: (response) => {
+      this.availableClasses = response.data ?? response;
+      this.assignmentLoading = false;
+      this.cdr.detectChanges();
+    },
+    error: (error) => {
+      console.error(error);
+      this.errorMessage = 'Unable to load school classes.';
+      this.assignmentLoading = false;
+      this.cdr.detectChanges();
+    }
+  });
+}
+
+// Load Classes Already Assigned to Teacher
+loadAssignedClasses(): void {
+  this.teacherClassService
+    .getTeacherClasses(this.selectedTeacher.teacherId)
+    .subscribe({
+      next: (response) => {
+        this.assignedClasses = response.data ?? response;
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.error(error);
+        this.errorMessage = 'Unable to load assigned classes.';
+        this.cdr.detectChanges();
+      }
+    });
+}
+
+// Select / Deselect Class
+toggleClassSelection(classId: number, checked: boolean): void {
+  if (checked) {
+    if (!this.selectedClassIds.includes(classId)) {
+      this.selectedClassIds.push(classId);
+    }
+  } else {
+    this.selectedClassIds =
+      this.selectedClassIds.filter(id => id !== classId);
+  }
+}
+
+// Check Whether Class Is Already Assigned
+isClassAssigned(classId: number): boolean {
+  return this.assignedClasses.some(
+    assignment => assignment.schoolClassId === classId
+  );
+}
+
+// Save Teacher-Class Assignments
+saveClassAssignments(): void {
+  if (!this.selectedClassIds.length) {
+    this.errorMessage = 'Please select at least one class.';
+    return;
+  }
+
+  this.assignmentSaving = true;
+  this.errorMessage = '';
+
+  const request = {
+    teacherId: this.selectedTeacher.teacherId,
+    schoolClassIds: this.selectedClassIds
+  };
+
+  this.teacherClassService.assignClasses(request).subscribe({
+    next: () => {
+      this.successMessage = 'Classes assigned successfully.';
+      this.selectedClassIds = [];
+      this.assignmentSaving = false;
+      this.loadAssignedClasses();
+    },
+    error: (error) => {
+      console.error(error);
+      this.errorMessage =
+        error.error?.message || 'Unable to assign classes.';
+
+      this.assignmentSaving = false;
+    }
+  });
+}
+
+// Remove Class Assignment
+removeClassAssignment(id: number): void {
+  if (!confirm('Are you sure you want to remove this class assignment?')) {
+    return;
+  }
+
+  this.teacherClassService.removeAssignment(id).subscribe({
+    next: () => {
+      this.successMessage = 'Class assignment removed successfully.';
+      this.loadAssignedClasses();
+    },
+    error: (error) => {
+      console.error(error);
+      this.errorMessage = 'Unable to remove class assignment.';
+    }
+  });
+}
+
+
+// Close Assignment Panel
+closeAssignmentPanel(): void {
+  this.showAssignmentPanel = false;
+  this.selectedTeacher = null;
+  this.selectedClassIds = [];
+  this.errorMessage = '';
+}
 
   // Form Validation Helper
   get f() {

@@ -1,0 +1,107 @@
+
+<div class="container-fluid p-3 p-md-4">
+
+  <!-- Header -->
+  <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+    <div>
+      <h2 class="fw-bold mb-1">My Students</h2>
+      <p class="text-secondary mb-0">
+        View students from your assigned classes
+      </p>
+    </div>
+
+    <button class="btn btn-outline-primary"
+            (click)="loadMyStudents()"
+            [disabled]="loading">
+      <i class="fas fa-sync-alt me-2"></i>
+      Refresh
+    </button>
+  </div>
+
+  <!-- Summary -->
+  <div class="row g-3 mb-4">
+    <div class="col-md-4">
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-body d-flex align-items-center gap-3">
+          <div class="rounded-circle bg-primary-subtle text-primary p-3">
+            <i class="fas fa-user-graduate fa-lg"></i>
+          </div>
+          <div>
+            <h4 class="fw-bold mb-0">{{ students.length }}</h4>
+            <small class="text-secondary">Total Students</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Search -->
+  <div class="card border-0 shadow-sm">
+    <div class="card-body">
+
+      <div class="row mb-3">
+        <div class="col-md-5">
+          <div class="input-group">
+            <span class="input-group-text bg-white">
+              <i class="fas fa-search"></i>
+            </span>
+
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Search by student name or email..."
+              [(ngModel)]="searchText"
+              (input)="searchStudents()">
+          </div>
+        </div>
+      </div>
+
+      <!-- Loading -->
+      <div class="text-center py-5" *ngIf="loading">
+        <div class="spinner-border text-primary"></div>
+        <p class="text-secondary mt-2 mb-0">
+          Loading students...
+        </p>
+      </div>
+
+      <!-- Error -->
+      <div class="alert alert-danger" *ngIf="!loading && errorMessage">
+        {{ errorMessage }}
+      </div>
+
+      <!-- Table -->
+      <div class="table-responsive"
+           *ngIf="!loading && !errorMessage">
+
+        <table class="table table-hover align-middle mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>#</th>
+              <th>Student Name</th>
+              <th>Email</th>
+              <th>Phone</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr *ngFor="let student of filteredStudents; let i = index">
+              <td>{{ i + 1 }}</td>
+              <td class="fw-semibold">
+                {{ getStudentName(student) }}
+              </td>
+              <td>{{ getStudentEmail(student) }}</td>
+              <td>{{ getStudentPhone(student) }}</td>
+            </tr>
+
+            <tr *ngIf="filteredStudents.length === 0">
+              <td colspan="4" class="text-center py-4 text-secondary">
+                No students found.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+      </div>
+    </div>
+  </div>
+</div>

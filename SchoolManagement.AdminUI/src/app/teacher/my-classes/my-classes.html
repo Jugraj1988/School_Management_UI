@@ -1,0 +1,81 @@
+
+<div class="container-fluid p-3 p-md-4">
+
+  <!-- Page Header -->
+  <div class="mb-4">
+    <h2 class="fw-bold mb-1">My Classes</h2>
+    <p class="text-secondary mb-0">
+      View all classes assigned to you
+    </p>
+  </div>
+
+  <!-- Error Message -->
+  <div class="alert alert-danger" *ngIf="errorMessage">
+    <i class="fa-solid fa-circle-exclamation me-2"></i>
+    {{ errorMessage }}
+  </div>
+
+  <!-- Loading -->
+  <div class="text-center py-5" *ngIf="loading">
+    <div class="spinner-border text-primary"></div>
+    <p class="text-secondary mt-2">Loading your classes...</p>
+  </div>
+
+  <!-- Class Cards -->
+  <div class="row g-4" *ngIf="!loading && classes.length > 0">
+
+    <div class="col-sm-6 col-lg-4 col-xl-3"
+         *ngFor="let schoolClass of classes">
+
+      <div class="card border-0 shadow-sm h-100">
+
+        <div class="card-body p-4">
+
+          <div class="d-flex justify-content-between align-items-center mb-3">
+
+            <div class="bg-primary bg-opacity-10 rounded p-3">
+              <i class="fa-solid fa-school text-primary fs-4"></i>
+            </div>
+
+            <span class="badge text-bg-success">
+              Assigned
+            </span>
+
+          </div>
+
+          <h5 class="fw-bold mb-2">
+            {{ schoolClass.grade }}
+          </h5>
+
+          <p class="text-secondary mb-0">
+            Section: {{ schoolClass.section }}
+          </p>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Empty State -->
+  <div class="card border-0 shadow-sm"
+       *ngIf="!loading && !errorMessage && classes.length === 0">
+
+    <div class="card-body text-center py-5">
+
+      <i class="fa-solid fa-school fs-1 text-secondary"></i>
+
+      <h5 class="fw-bold mt-3">No Classes Assigned</h5>
+
+      <p class="text-secondary mb-0">
+        No classes have been assigned to you yet.
+        Please contact your School Admin.
+      </p>
+
+    </div>
+
+  </div>
+
+</div>

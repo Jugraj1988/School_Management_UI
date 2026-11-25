@@ -15,4 +15,6 @@ export class SchoolClassService {
   getAllClasses(): Observable<any> {
     return this.http.get(`${this.apiUrl}/classes`);
   }
+
+  
 }

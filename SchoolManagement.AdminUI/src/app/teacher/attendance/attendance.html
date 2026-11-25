@@ -1,0 +1,309 @@
+
+<div class="container-fluid p-3 p-md-4">
+
+  <!-- Page Header -->
+  <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+    <div>
+      <h2 class="fw-bold mb-1">Student Attendance</h2>
+      <p class="text-secondary mb-0">
+        Manage attendance for your assigned classes
+      </p>
+    </div>
+
+    <button class="btn btn-outline-primary"
+            (click)="onDateChange()"
+            [disabled]="loadingStudents">
+      <i class="fas fa-sync-alt me-2"></i>
+      Refresh
+    </button>
+  </div>
+
+  <!-- Summary Cards -->
+  <div class="row g-3 mb-4">
+
+    <div class="col-md-4">
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-body d-flex align-items-center gap-3">
+          <div class="rounded-circle bg-primary-subtle text-primary p-3">
+            <i class="fas fa-users fa-lg"></i>
+          </div>
+          <div>
+            <h4 class="fw-bold mb-0">{{ students.length }}</h4>
+            <small class="text-secondary">Total Students</small>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-body d-flex align-items-center gap-3">
+          <div class="rounded-circle bg-success-subtle text-success p-3">
+            <i class="fas fa-user-check fa-lg"></i>
+          </div>
+          <div>
+            <h4 class="fw-bold mb-0">{{ presentCount }}</h4>
+            <small class="text-secondary">Present</small>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-body d-flex align-items-center gap-3">
+          <div class="rounded-circle bg-danger-subtle text-danger p-3">
+            <i class="fas fa-user-times fa-lg"></i>
+          </div>
+          <div>
+            <h4 class="fw-bold mb-0">{{ absentCount }}</h4>
+            <small class="text-secondary">Absent</small>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Messages -->
+  <div class="alert alert-danger" *ngIf="errorMessage">
+    {{ errorMessage }}
+  </div>
+
+  <div class="alert alert-success" *ngIf="successMessage">
+    {{ successMessage }}
+  </div>
+
+  <!-- Attendance Card -->
+  <div class="card border-0 shadow-sm">
+
+    <div class="card-header bg-white py-3">
+      <h5 class="fw-bold mb-0">Student Attendance</h5>
+    </div>
+
+    <div class="card-body">
+
+      <!-- Filters -->
+      <div class="row g-3 mb-4">
+
+        <div class="col-md-4">
+          <label class="form-label fw-semibold">Select Class</label>
+
+          <select class="form-select"
+                  [(ngModel)]="selectedClassId"
+                  (ngModelChange)="onClassChange()"
+                  [disabled]="loadingClasses">
+
+            <option [ngValue]="null">-- Select Class --</option>
+
+            <option *ngFor="let classItem of assignedClasses"
+                    [ngValue]="classItem.schoolClassId">
+              {{ classItem.grade }} - {{ classItem.section }}
+            </option>
+
+          </select>
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label fw-semibold">Academic Year</label>
+
+          <select class="form-select"
+                  [(ngModel)]="selectedAcademicYearId"
+                  (ngModelChange)="onAcademicYearChange()"
+                  [disabled]="!academicYears.length">
+
+            <option [ngValue]="null">-- Select Academic Year --</option>
+
+            <option *ngFor="let year of academicYears"
+                    [ngValue]="year.academicYearId">
+              {{ year.academicYearName }}
+            </option>
+
+          </select>
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label fw-semibold">Attendance Date</label>
+
+          <input type="date"
+                 class="form-control"
+                 [(ngModel)]="attendanceDate"
+                 (change)="onDateChange()">
+        </div>
+
+      </div>
+
+      <!-- Loading -->
+      <div class="text-center py-5" *ngIf="loadingStudents">
+        <div class="spinner-border text-primary"></div>
+        <p class="text-secondary mt-2 mb-0">
+          Loading attendance...
+        </p>
+      </div>
+
+      <!-- Student List -->
+      <div *ngIf="!loadingStudents && students.length > 0">
+
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+
+          <div>
+            <h6 class="fw-bold mb-1">
+              Student List ({{ students.length }})
+            </h6>
+            <small class="text-secondary">
+              Unmarked: {{ unmarkedCount }}
+            </small>
+          </div>
+
+          <div class="d-flex gap-2">
+            <button class="btn btn-sm btn-outline-success"
+                    type="button"
+                    (click)="markAll(true)">
+              <i class="fas fa-check me-1"></i>
+              All Present
+            </button>
+
+            <button class="btn btn-sm btn-outline-danger"
+                    type="button"
+                    (click)="markAll(false)">
+              <i class="fas fa-times me-1"></i>
+              All Absent
+            </button>
+          </div>
+
+        </div>
+
+        <div class="table-responsive">
+          <table class="table table-hover align-middle">
+
+            <thead class="table-light">
+              <tr>
+                <th style="width: 70px;">#</th>
+                <th>Student Name</th>
+                <th class="text-center">Attendance Status</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr *ngFor="let student of students; let i = index">
+
+                <td>{{ i + 1 }}</td>
+
+                <td class="fw-semibold">
+                  {{ student.studentName }}
+                </td>
+
+                <td class="text-center">
+
+                  <!-- Already marked and not editing -->
+                  <div *ngIf="student.isMarked && !student.isEditing"
+                       class="d-flex justify-content-center align-items-center gap-2">
+
+                    <span *ngIf="student.isPresent"
+                          class="badge bg-success px-3 py-2">
+                      <i class="fas fa-check me-1"></i>
+                      Present
+                    </span>
+
+                    <span *ngIf="!student.isPresent"
+                          class="badge bg-danger px-3 py-2">
+                      <i class="fas fa-times me-1"></i>
+                      Absent
+                    </span>
+
+                    <button class="btn btn-sm btn-outline-primary"
+                            type="button"
+                            (click)="editAttendance(student)">
+                      <i class="fas fa-edit me-1"></i>
+                      Edit
+                    </button>
+
+                  </div>
+
+                  <!-- Unmarked or editing -->
+                  <div *ngIf="!student.isMarked || student.isEditing"
+                       class="btn-group" role="group">
+
+                    <button type="button"
+                            class="btn btn-sm"
+                            [class.btn-success]="student.isPresent"
+                            [class.btn-outline-success]="!student.isPresent"
+                            (click)="student.isPresent = true">
+                      <i class="fas fa-check me-1"></i>
+                      Present
+                    </button>
+
+                    <button type="button"
+                            class="btn btn-sm"
+                            [class.btn-danger]="!student.isPresent"
+                            [class.btn-outline-danger]="student.isPresent"
+                            (click)="student.isPresent = false">
+                      <i class="fas fa-times me-1"></i>
+                      Absent
+                    </button>
+
+                  </div>
+
+                </td>
+
+              </tr>
+            </tbody>
+
+          </table>
+        </div>
+
+        <!-- Save Button -->
+        <div class="d-flex justify-content-end mt-3">
+          <button class="btn btn-primary px-4"
+                  type="button"
+                  (click)="saveAttendance()"
+                  [disabled]="saving || !students.length">
+
+            <span *ngIf="saving"
+                  class="spinner-border spinner-border-sm me-2">
+            </span>
+
+            <i *ngIf="!saving"
+               class="fas fa-save me-2"></i>
+
+            {{ saving ? 'Saving...' : 'Save Attendance' }}
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Empty State -->
+      <div class="text-center py-5"
+           *ngIf="!loadingStudents &&
+                  selectedClassId &&
+                  selectedAcademicYearId &&
+                  students.length === 0">
+
+        <i class="fas fa-user-graduate fa-3x text-secondary mb-3"></i>
+
+        <h6 class="fw-semibold">No Students Found</h6>
+
+        <p class="text-secondary mb-0">
+          No active enrollments are available for this academic year.
+        </p>
+
+      </div>
+
+      <!-- Initial State -->
+      <div class="text-center py-5"
+           *ngIf="!loadingClasses && !selectedClassId">
+
+        <i class="fas fa-chalkboard-teacher fa-3x text-secondary mb-3"></i>
+
+        <h6 class="fw-semibold">Select a Class</h6>
+
+        <p class="text-secondary mb-0">
+          Choose one of your assigned classes to load students.
+        </p>
+
+      </div>
+
+    </div>
+  </div>
+
+</div>

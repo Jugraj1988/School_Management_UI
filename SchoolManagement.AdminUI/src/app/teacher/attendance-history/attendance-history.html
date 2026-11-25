@@ -1,0 +1,421 @@
+
+<div class="container-fluid attendance-history-container">
+
+  <!-- Page Header -->
+  <div class="page-header d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h2>
+        <i class="fas fa-chart-line me-2"></i>
+        Attendance History & Reports
+      </h2>
+      <p class="text-muted mb-0">
+        View class attendance records and student performance.
+      </p>
+    </div>
+
+    <button
+      class="btn btn-outline-primary refresh-btn"
+      type="button"
+      (click)="loadAttendanceData()"
+      [disabled]="loadingHistory || loadingReport">
+      <i class="fas fa-sync-alt me-2"></i>
+      Refresh
+    </button>
+  </div>
+
+  <!-- Error Message -->
+  <div *ngIf="errorMessage" class="alert alert-danger alert-dismissible">
+    <i class="fas fa-exclamation-circle me-2"></i>
+    {{ errorMessage }}
+    <button
+      type="button"
+      class="btn-close"
+      (click)="errorMessage = ''">
+    </button>
+  </div>
+
+  <!-- Loading Classes -->
+  <div *ngIf="loadingClasses" class="text-center py-5">
+    <div class="spinner-border text-primary"></div>
+    <p class="mt-2 text-muted">Loading assigned classes...</p>
+  </div>
+
+  <ng-container *ngIf="!loadingClasses">
+
+    <div *ngIf="assignedClasses.length === 0"
+         class="alert alert-info">
+      No assigned classes found.
+    </div>
+
+    <ng-container *ngIf="assignedClasses.length > 0">
+
+      <!-- Filters -->
+      <div class="card filter-card mb-4">
+        <div class="card-header">
+          <h5 class="mb-0">
+            <i class="fas fa-filter me-2"></i>
+            Report Filters
+          </h5>
+        </div>
+
+        <div class="card-body">
+          <div class="row g-3">
+
+            <div class="col-md-4">
+              <label class="form-label">Select Class</label>
+              <select
+                class="form-select"
+                [(ngModel)]="selectedClassId"
+                (change)="onFilterChange()">
+
+                <option [ngValue]="null">Select Class</option>
+
+                <option
+                  *ngFor="let item of assignedClasses"
+                  [ngValue]="+(item.schoolClassId ?? item.SchoolClassId)">
+                  {{ getClassName(item) }}
+                </option>
+              </select>
+            </div>
+
+            <div class="col-md-3">
+              <label class="form-label">From Date</label>
+              <input
+                type="date"
+                class="form-control"
+                [(ngModel)]="fromDate"
+                (change)="onFilterChange()">
+            </div>
+
+            <div class="col-md-3">
+              <label class="form-label">To Date</label>
+              <input
+                type="date"
+                class="form-control"
+                [(ngModel)]="toDate"
+                (change)="onFilterChange()">
+            </div>
+
+            <div class="col-md-2 d-flex align-items-end">
+              <button
+                class="btn btn-primary w-100"
+                type="button"
+                (click)="onFilterChange()">
+                <i class="fas fa-search me-2"></i>
+                Apply
+              </button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- Summary Cards -->
+      <div class="row g-3 mb-4">
+
+        <div class="col-md-3">
+          <div class="card summary-card total-card">
+            <div class="card-body">
+              <div class="summary-icon">
+                <i class="fas fa-users"></i>
+              </div>
+              <div>
+                <h3>{{ totalStudents }}</h3>
+                <p>Total Students</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <div class="card summary-card present-card">
+            <div class="card-body">
+              <div class="summary-icon">
+                <i class="fas fa-user-check"></i>
+              </div>
+              <div>
+                <h3>{{ totalPresent }}</h3>
+                <p>Present Records</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <div class="card summary-card absent-card">
+            <div class="card-body">
+              <div class="summary-icon">
+                <i class="fas fa-user-times"></i>
+              </div>
+              <div>
+                <h3>{{ totalAbsent }}</h3>
+                <p>Absent Records</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <div class="card summary-card percentage-card">
+            <div class="card-body">
+              <div class="summary-icon">
+                <i class="fas fa-chart-pie"></i>
+              </div>
+              <div>
+                <h3>{{ attendancePercentage | number:'1.1-2' }}%</h3>
+                <p>Attendance Rate</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Report Loading -->
+      <div *ngIf="loadingReport" class="text-center py-3">
+        <div class="spinner-border spinner-border-sm text-primary"></div>
+        <span class="ms-2">Loading report...</span>
+      </div>
+
+      <!-- Student-wise Report -->
+      <div class="card report-card mb-4">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h5 class="mb-0">
+            <i class="fas fa-user-graduate me-2"></i>
+            Student-wise Attendance Report
+          </h5>
+          <span class="badge bg-primary">
+            {{ studentReports.length }} Students
+          </span>
+        </div>
+
+        <div class="card-body p-0">
+
+          <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Student Name</th>
+                  <th>Present Days</th>
+                  <th>Absent Days</th>
+                  <th>Attendance %</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                <tr *ngFor="let student of studentReports; let i = index">
+                  <td>{{ i + 1 }}</td>
+
+                  <td class="fw-semibold">
+                    {{ getStudentName(student) }}
+                  </td>
+
+                  <td>
+                    <span class="badge bg-success">
+                      {{ getPresentDays(student) }}
+                    </span>
+                  </td>
+
+                  <td>
+                    <span class="badge bg-danger">
+                      {{ getAbsentDays(student) }}
+                    </span>
+                  </td>
+
+                  <td>
+                    <div class="percentage-wrapper">
+                      <div class="progress">
+                        <div
+                          class="progress-bar"
+                          [class.bg-success]="getStudentPercentage(student) >= 75"
+                          [class.bg-warning]="getStudentPercentage(student) >= 50 && getStudentPercentage(student) < 75"
+                          [class.bg-danger]="getStudentPercentage(student) < 50"
+                          [style.width.%]="getStudentPercentage(student)">
+                        </div>
+                      </div>
+
+                      <span>
+                        {{ getStudentPercentage(student) | number:'1.1-2' }}%
+                      </span>
+                    </div>
+                  </td>
+
+                  <td>
+                    <button
+                      class="btn btn-sm btn-outline-primary"
+                      type="button"
+                      (click)="viewStudentHistory(student)">
+                      <i class="fas fa-eye me-1"></i>
+                      View History
+                    </button>
+                  </td>
+                </tr>
+
+                <tr *ngIf="!loadingReport && studentReports.length === 0">
+                  <td colspan="6" class="text-center py-4 text-muted">
+                    No student report records found for this date range.
+                  </td>
+                </tr>
+
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Class Attendance History -->
+      <div class="card history-card mb-4">
+        <div class="card-header">
+          <h5 class="mb-0">
+            <i class="fas fa-calendar-alt me-2"></i>
+            Class Attendance History
+          </h5>
+        </div>
+
+        <div class="card-body p-0">
+
+          <div *ngIf="loadingHistory" class="text-center py-4">
+            <div class="spinner-border text-primary"></div>
+            <p class="text-muted mt-2 mb-0">
+              Loading attendance records...
+            </p>
+          </div>
+
+          <div *ngIf="!loadingHistory" class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Date</th>
+                  <th>Student Name</th>
+                  <th>Attendance Status</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                <tr *ngFor="let record of attendanceHistory; let i = index">
+                  <td>{{ i + 1 }}</td>
+
+                  <td>
+                    {{ getHistoryDate(record) | date:'dd MMM yyyy' }}
+                  </td>
+
+                  <td class="fw-semibold">
+                    {{ getHistoryStudentName(record) }}
+                  </td>
+
+                  <td>
+                    <span
+                      *ngIf="isPresent(record)"
+                      class="badge bg-success">
+                      <i class="fas fa-check me-1"></i>
+                      Present
+                    </span>
+
+                    <span
+                      *ngIf="!isPresent(record)"
+                      class="badge bg-danger">
+                      <i class="fas fa-times me-1"></i>
+                      Absent
+                    </span>
+                  </td>
+                </tr>
+
+                <tr *ngIf="attendanceHistory.length === 0">
+                  <td colspan="4" class="text-center py-4 text-muted">
+                    No attendance history found for this period.
+                  </td>
+                </tr>
+              </tbody>
+
+            </table>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Individual Student History -->
+      <div
+        *ngIf="selectedStudentId !== null"
+        class="card student-history-card mb-4">
+
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h5 class="mb-0">
+            <i class="fas fa-user-clock me-2"></i>
+            {{ selectedStudentName }} - Attendance History
+          </h5>
+
+          <button
+            class="btn btn-sm btn-outline-secondary"
+            type="button"
+            (click)="closeStudentHistory()">
+            <i class="fas fa-times me-1"></i>
+            Close
+          </button>
+        </div>
+
+        <div class="card-body">
+
+          <div *ngIf="loadingStudentHistory" class="text-center py-3">
+            <div class="spinner-border text-primary"></div>
+            <p class="text-muted mt-2">Loading student history...</p>
+          </div>
+
+          <div
+            *ngIf="!loadingStudentHistory && studentHistory.length === 0"
+            class="alert alert-info mb-0">
+            No attendance records found for this student.
+          </div>
+
+          <div
+            *ngIf="!loadingStudentHistory && studentHistory.length > 0"
+            class="table-responsive">
+
+            <table class="table table-bordered align-middle">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Date</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                <tr *ngFor="let record of studentHistory; let i = index">
+                  <td>{{ i + 1 }}</td>
+
+                  <td>
+                    {{ getHistoryDate(record) | date:'dd MMM yyyy' }}
+                  </td>
+
+                  <td>
+                    <span
+                      *ngIf="isPresent(record)"
+                      class="badge bg-success">
+                      Present
+                    </span>
+
+                    <span
+                      *ngIf="!isPresent(record)"
+                      class="badge bg-danger">
+                      Absent
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+          </div>
+
+        </div>
+      </div>
+
+    </ng-container>
+  </ng-container>
+
+</div>
