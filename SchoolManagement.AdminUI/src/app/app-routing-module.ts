@@ -20,9 +20,14 @@ import { SchoolAdminDashboard } from './pages/school-admin-dashboard/school-admi
 import { TeacherDashboard } from './features/teacher/teacher-dashboard/teacher-dashboard';
 import { TeacherLayout } from './features/teacher/teacher-layout/teacher-layout';
 import { TeacherStudents } from './features/teacher/teacher-students/teacher-students';
-import { MyClasses } from './teacher/my-classes/my-classes';
+import { TeacherClasses } from './teacher/my-classes/my-classes';
 import { Attendance } from './teacher/attendance/attendance';
 import { AttendanceHistory } from './teacher/attendance-history/attendance-history';
+import { Profile } from './shared/profile/profile';
+import { StudentLayout } from './features/student/student-layout/student-layout';
+import { StudentDashboard } from './features/student/dashboard/student-dashboard';
+import { MyAttendance } from './features/student/my-attendance/my-attendance';
+import { StudentClasses } from './features/student/my-classes/my-classes';
 
 const routes: Routes = [
 
@@ -85,10 +90,6 @@ const routes: Routes = [
         path: 'users',
         component: Users
       },
-      {
-  path: 'attendance-history',
-  component: AttendanceHistory
-},
 
       {
         path: '',
@@ -98,6 +99,8 @@ const routes: Routes = [
 
     ]
   },
+
+  //Teacher Pannel
 
   {
   path: 'teacher',
@@ -115,7 +118,7 @@ const routes: Routes = [
     },
     {
   path: 'my-classes',
-  component: MyClasses
+  component: TeacherClasses
 },
   {
   path: 'mark-attendance',
@@ -124,7 +127,41 @@ const routes: Routes = [
 {
   path: 'attendance-history',
   component: AttendanceHistory
-}
+},
+{ path: 'profile', component: Profile }
+  ]
+},
+{
+  path: 'student',
+  component: StudentLayout,
+  canActivate: [authGuard],
+  data: { role: 'Student' },
+  children: [
+    {
+      path: 'dashboard',
+      component: StudentDashboard
+    },
+    {
+      path: 'my-profile',
+      component: Profile
+    },
+    {
+      path: 'my-classes',
+      component: StudentClasses
+    },
+    {
+      path: 'attendance',
+      component: MyAttendance
+    },
+    // {
+    //   path: 'results',
+    //   component: Results
+    // },
+    {
+      path: '',
+      redirectTo: 'dashboard',
+      pathMatch: 'full'
+    }
   ]
 },
 

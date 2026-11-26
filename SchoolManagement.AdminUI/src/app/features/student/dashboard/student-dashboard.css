@@ -1,0 +1,88 @@
+
+/* Dashboard container */
+.container-fluid {
+  color: #334155;
+}
+
+/* Dashboard heading */
+h3 {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 25px;
+}
+
+/* Enrollment cards */
+.card {
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  background: #ffffff;
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08) !important;
+  border-color: #cbd5e1;
+}
+
+.card-body {
+  padding: 22px;
+}
+
+/* Class title */
+.card-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #2563eb;
+  margin-bottom: 18px;
+}
+
+/* Enrollment details */
+.card-body p {
+  font-size: 14px;
+  color: #64748b;
+  margin-bottom: 12px;
+}
+
+.card-body strong {
+  color: #334155;
+  font-weight: 600;
+}
+
+/* Status badge */
+.badge {
+  padding: 7px 13px;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 20px;
+}
+
+/* Loading spinner */
+.spinner-border {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+/* Empty state and error message */
+.alert {
+  border-radius: 10px;
+  font-size: 14px;
+  padding: 15px 18px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 576px) {
+  h3 {
+    font-size: 21px;
+  }
+
+  .card-body {
+    padding: 18px;
+  }
+
+  .card-title {
+    font-size: 20px;
+  }
+}

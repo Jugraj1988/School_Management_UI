@@ -79,5 +79,15 @@ getClassAttendanceReport(
       params: { fromDate, toDate }
     }
   );
+  
+}
+
+getMyAttendance(fromDate: string, toDate: string): Observable<any> {
+  return this.http.get(
+    `${this.apiUrl}/my-attendance`,
+    {
+      params: { fromDate, toDate }
+    }
+  );
 }
 }

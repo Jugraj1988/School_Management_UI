@@ -8,7 +8,7 @@ import { TeacherClassService } from '../../core/services/teacher-class-service';
   templateUrl: './my-classes.html',
   styleUrls: ['./my-classes.css']
 })
-export class MyClasses implements OnInit {
+export class TeacherClasses implements OnInit {
 
   classes: any[] = [];
   loading = false;

@@ -32,6 +32,10 @@ export class UserService {
       .pipe(map(response => response.data));
   }
 
+  getMyProfile(): Observable<any> {
+  return this.http.get(`${this.apiUrl}/my-profile`);
+}
+
   getUserById(userId: number): Observable<User> {
     return this.http
       .get<ApiResponse<User>>(`${this.apiUrl}/by/${userId}`)

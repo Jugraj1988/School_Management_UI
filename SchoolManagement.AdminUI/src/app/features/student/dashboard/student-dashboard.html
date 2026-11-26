@@ -1,0 +1,234 @@
+
+<div class="container-fluid py-4">
+
+  <!-- Page Header -->
+  <div class="mb-4">
+    <h3 class="fw-bold mb-1">Student Dashboard</h3>
+    <p class="text-muted mb-0">
+      Welcome to your student dashboard. Here's your academic overview.
+    </p>
+  </div>
+
+  <!-- ===================================== -->
+  <!-- MY CLASSES / ENROLLMENT SECTION       -->
+  <!-- ===================================== -->
+
+  <div class="mb-5">
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h4 class="fw-bold mb-0">My Classes</h4>
+
+      <button
+        type="button"
+        class="btn btn-outline-primary btn-sm"
+        (click)="loadMyEnrollments()"
+        [disabled]="loading">
+
+        <i class="fas fa-sync-alt me-2"></i>
+        Refresh
+      </button>
+    </div>
+
+    <!-- Enrollment Loading -->
+    <div *ngIf="loading" class="text-center py-4">
+      <div class="spinner-border text-primary"></div>
+      <p class="text-muted mt-2 mb-0">
+        Loading your enrollments...
+      </p>
+    </div>
+
+    <!-- Enrollment Error -->
+    <div *ngIf="errorMessage" class="alert alert-danger">
+      {{ errorMessage }}
+    </div>
+
+    <!-- No Enrollments -->
+    <div
+      *ngIf="!loading && !errorMessage && enrollments.length === 0"
+      class="alert alert-info">
+
+      No enrollments found.
+    </div>
+
+    <!-- Enrollment Cards -->
+    <div
+      *ngIf="!loading && !errorMessage && enrollments.length > 0"
+      class="row g-3">
+
+      <div
+        class="col-md-6 col-lg-4"
+        *ngFor="let enrollment of enrollments">
+
+        <div class="card shadow-sm border-0 h-100">
+
+          <div class="card-body">
+
+            <h4 class="fw-bold text-primary mb-3">
+              {{ enrollment.grade }}
+            </h4>
+
+            <p class="mb-2">
+              <strong>Academic Year:</strong>
+              {{ enrollment.academicYearName }}
+            </p>
+
+            <p class="mb-3">
+              <strong>Enrollment Date:</strong>
+              {{ enrollment.enrolledOn | date:'dd MMM yyyy' }}
+            </p>
+
+            <span
+              class="badge"
+              [ngClass]="enrollment.isActive ? 'bg-success' : 'bg-secondary'">
+
+              {{ enrollment.isActive ? 'Active' : 'Inactive' }}
+
+            </span>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- ===================================== -->
+  <!-- ATTENDANCE SUMMARY SECTION            -->
+  <!-- ===================================== -->
+
+  <div class="mb-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+
+      <div>
+        <h4 class="fw-bold mb-1">Attendance Summary</h4>
+        <p class="text-muted mb-0">
+          Your attendance for the current month.
+        </p>
+      </div>
+
+      <button
+        type="button"
+        class="btn btn-outline-primary btn-sm"
+        (click)="loadAttendanceSummary()"
+        [disabled]="attendanceLoading">
+
+        <i class="fas fa-sync-alt me-2"></i>
+        Refresh
+      </button>
+
+    </div>
+
+    <!-- Attendance Loading -->
+    <div *ngIf="attendanceLoading" class="text-center py-4">
+
+      <div class="spinner-border text-primary"></div>
+
+      <p class="text-muted mt-2 mb-0">
+        Loading attendance summary...
+      </p>
+
+    </div>
+
+    <!-- Attendance Error -->
+    <div *ngIf="attendanceError" class="alert alert-danger">
+      {{ attendanceError }}
+    </div>
+
+    <!-- Attendance Summary Cards -->
+    <div
+      *ngIf="!attendanceLoading && !attendanceError"
+      class="row g-3">
+
+      <!-- Total Attendance -->
+      <div class="col-md-6 col-xl-3">
+
+        <div class="card shadow-sm border-0 h-100">
+
+          <div class="card-body">
+
+            <p class="text-muted mb-2">
+              Total Attendance
+            </p>
+
+            <h3 class="fw-bold mb-0">
+              {{ totalAttendance }}
+            </h3>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Present Days -->
+      <div class="col-md-6 col-xl-3">
+
+        <div class="card shadow-sm border-0 h-100">
+
+          <div class="card-body">
+
+            <p class="text-muted mb-2">
+              Present Days
+            </p>
+
+            <h3 class="fw-bold text-success mb-0">
+              {{ presentCount }}
+            </h3>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Absent Days -->
+      <div class="col-md-6 col-xl-3">
+
+        <div class="card shadow-sm border-0 h-100">
+
+          <div class="card-body">
+
+            <p class="text-muted mb-2">
+              Absent Days
+            </p>
+
+            <h3 class="fw-bold text-danger mb-0">
+              {{ absentCount }}
+            </h3>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Attendance Percentage -->
+      <div class="col-md-6 col-xl-3">
+
+        <div class="card shadow-sm border-0 h-100">
+
+          <div class="card-body">
+
+            <p class="text-muted mb-2">
+              Attendance Percentage
+            </p>
+
+            <h3 class="fw-bold text-primary mb-0">
+              {{ attendancePercentage }}%
+            </h3>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

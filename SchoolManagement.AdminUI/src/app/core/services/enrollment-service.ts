@@ -1,3 +1,4 @@
+
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -11,7 +12,11 @@ export class EnrollmentService {
 
   constructor(private http: HttpClient) {}
 
-getByClass(classId: number): Observable<any> {
-  return this.http.get(`${this.apiUrl}/byClass/${classId}`);
-}
+  getByClass(classId: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/byClass/${classId}`);
+  }
+
+  getMyEnrollments(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/my-enrollments`);
+  }
 }

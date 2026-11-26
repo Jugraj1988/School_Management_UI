@@ -80,9 +80,16 @@ export class LoginComponent {
   else if (roleName === 'teacher') {
     this.router.navigate(['/teacher/dashboard']);
   }
+  
+   else if (roleName === 'student') {
+    this.router.navigate(['/student/dashboard']);
+  }
   else {
     this.errorMessage = `Invalid user role: ${response.user.roleName}`;
   }
+
+  
+  
 
   this.cdr.detectChanges();
 },

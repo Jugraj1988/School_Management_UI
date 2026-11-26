@@ -1,0 +1,179 @@
+<div class="container-fluid py-4">
+
+  <!-- Page Header -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h3 class="fw-bold mb-1">My Profile</h3>
+      <p class="text-muted mb-0">View your personal and professional information.</p>
+    </div>
+
+    <button class="btn btn-outline-primary"
+            (click)="loadProfile()"
+            [disabled]="loading">
+      <i class="fas fa-sync-alt me-2"></i>
+      Refresh
+    </button>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status"></div>
+    <p class="text-muted mt-2">Loading profile...</p>
+  </div>
+
+  <!-- Error -->
+  <div *ngIf="!loading && errorMessage"
+       class="alert alert-danger">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Profile Content -->
+  <div *ngIf="!loading && profile">
+
+    <!-- Common User Information -->
+    <div class="card shadow-sm border-0 mb-4">
+
+      <div class="card-header bg-primary text-white py-3">
+        <h5 class="mb-0">
+          <i class="fas fa-user-circle me-2"></i>
+          Personal Information
+        </h5>
+      </div>
+
+      <div class="card-body">
+
+        <div class="row g-4">
+
+          <div class="col-md-6">
+            <label class="text-muted small">User ID</label>
+            <p class="fw-semibold">{{ profile.userId }}</p>
+          </div>
+
+          <div class="col-md-6">
+            <label class="text-muted small">Full Name</label>
+            <p class="fw-semibold">{{ profile.fullName }}</p>
+          </div>
+
+          <div class="col-md-6">
+            <label class="text-muted small">Email</label>
+            <p class="fw-semibold">{{ profile.email }}</p>
+          </div>
+
+          <div class="col-md-6">
+            <label class="text-muted small">Phone Number</label>
+            <p class="fw-semibold">{{ profile.phoneNumber || 'Not provided' }}</p>
+          </div>
+
+          <div class="col-md-6">
+            <label class="text-muted small">Address</label>
+            <p class="fw-semibold">{{ profile.address || 'Not provided' }}</p>
+          </div>
+
+          <div class="col-md-6">
+            <label class="text-muted small">Account Status</label>
+            <p>
+              <span class="badge"
+                    [ngClass]="profile.isActive ? 'bg-success' : 'bg-danger'">
+                {{ profile.isActive ? 'Active' : 'Inactive' }}
+              </span>
+            </p>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Teacher Information -->
+    <div *ngIf="profile.teacherInfo"
+         class="card shadow-sm border-0 mb-4">
+
+      <div class="card-header bg-success text-white py-3">
+        <h5 class="mb-0">
+          <i class="fas fa-chalkboard-teacher me-2"></i>
+          Teacher Information
+        </h5>
+      </div>
+
+      <div class="card-body">
+
+        <div class="row g-4">
+
+          <div class="col-md-6">
+            <label class="text-muted small">Teacher ID</label>
+            <p class="fw-semibold">{{ profile.teacherInfo.teacherId }}</p>
+          </div>
+
+          <div class="col-md-6">
+            <label class="text-muted small">Qualification</label>
+            <p class="fw-semibold">
+              {{ profile.teacherInfo.qualification || 'Not provided' }}
+            </p>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Student Information -->
+    <div *ngIf="profile.studentInfo"
+         class="card shadow-sm border-0 mb-4">
+
+      <div class="card-header bg-info text-white py-3">
+        <h5 class="mb-0">
+          <i class="fas fa-user-graduate me-2"></i>
+          Student Information
+        </h5>
+      </div>
+
+      <div class="card-body">
+
+        <div class="row g-4">
+
+          <div class="col-md-6">
+            <label class="text-muted small">Student ID</label>
+            <p class="fw-semibold">{{ profile.studentInfo.studentId }}</p>
+          </div>
+
+          <div class="col-md-6">
+            <label class="text-muted small">Admission Number</label>
+            <p class="fw-semibold">
+              {{ profile.studentInfo.admissionNo || 'Not provided' }}
+            </p>
+          </div>
+
+          <div class="col-md-6">
+            <label class="text-muted small">Date of Birth</label>
+            <p class="fw-semibold">
+              {{ profile.studentInfo.dateOfBirth
+                  ? (profile.studentInfo.dateOfBirth | date:'dd MMM yyyy')
+                  : 'Not provided' }}
+            </p>
+          </div>
+
+          <div class="col-md-6">
+            <label class="text-muted small">Gender</label>
+            <p class="fw-semibold">
+              {{ profile.studentInfo.gender || 'Not provided' }}
+            </p>
+          </div>
+
+          <div class="col-md-6">
+            <label class="text-muted small">Academic Year</label>
+            <p class="fw-semibold">
+              {{ profile.studentInfo.name || 'Not assigned' }}
+            </p>
+          </div>
+
+          <div class="col-md-6">
+            <label class="text-muted small">Grade</label>
+            <p class="fw-semibold">
+              {{ profile.studentInfo.grade || 'Not assigned' }}
+            </p>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

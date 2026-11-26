@@ -28,6 +28,7 @@ export interface LoginResponse {
   providedIn: 'root'
 })
 export class AuthService {
+
   private readonly apiUrl =
     `${environment.apiUrl}/Authentication/login`;
 
@@ -39,8 +40,8 @@ export class AuthService {
       .pipe(
         tap(response => {
           if (response?.token && response?.user) {
-            localStorage.setItem('token', response.token);
-            localStorage.setItem(
+            sessionStorage.setItem('token', response.token);
+            sessionStorage.setItem(
               'user',
               JSON.stringify(response.user)
             );
@@ -50,11 +51,11 @@ export class AuthService {
   }
 
   getToken(): string | null {
-    return localStorage.getItem('token');
+    return sessionStorage.getItem('token');
   }
 
   getUser(): AuthUser | null {
-    const user = localStorage.getItem('user');
+    const user = sessionStorage.getItem('user');
 
     if (!user) {
       return null;
@@ -81,8 +82,7 @@ export class AuthService {
   }
 
   logout(): void {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    localStorage.removeItem('role');
+    sessionStorage.removeItem('token');
+    sessionStorage.removeItem('user');
   }
 }

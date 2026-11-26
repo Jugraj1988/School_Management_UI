@@ -1,0 +1,180 @@
+
+/* Main Container */
+.container-fluid {
+  max-width: 1400px;
+}
+
+/* Page Header */
+h2 {
+  color: #1e293b;
+  font-size: 26px;
+  letter-spacing: -0.5px;
+}
+
+.text-muted {
+  color: #64748b !important;
+}
+
+/* Cards */
+.card {
+  border-radius: 12px;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.07) !important;
+}
+
+.card-body {
+  padding: 22px;
+}
+
+/* Date Filters */
+.form-label {
+  color: #334155;
+  font-size: 14px;
+}
+
+.form-control {
+  min-height: 43px;
+  border: 1px solid #dbe2ea;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.form-control:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
+}
+
+/* View Attendance Button */
+.btn-primary {
+  min-height: 43px;
+  border-radius: 8px;
+  background: #2563eb;
+  border-color: #2563eb;
+  font-weight: 600;
+  transition: background 0.2s ease;
+}
+
+.btn-primary:hover {
+  background: #1d4ed8;
+  border-color: #1d4ed8;
+}
+
+.btn-primary:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Summary Cards */
+.card-body h3 {
+  font-size: 30px;
+  margin-top: 8px;
+  margin-bottom: 0;
+  color: #1e293b;
+}
+
+.card-body .text-success {
+  color: #16a34a !important;
+}
+
+.card-body .text-danger {
+  color: #dc2626 !important;
+}
+
+/* Attendance History Header */
+.card-header {
+  border-bottom: 1px solid #e9eef5;
+  padding: 18px 22px;
+}
+
+.card-header h5 {
+  color: #1e293b;
+  font-size: 17px;
+}
+
+/* Attendance Table */
+.table {
+  font-size: 14px;
+}
+
+.table thead th {
+  color: #475569;
+  font-weight: 600;
+  font-size: 13px;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  white-space: nowrap;
+}
+
+.table tbody td {
+  color: #334155;
+  padding-top: 16px;
+  padding-bottom: 16px;
+}
+
+.table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.table-hover tbody tr:hover {
+  background-color: #f8fafc;
+}
+
+/* Status Badges */
+.badge {
+  min-width: 75px;
+  padding: 7px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* Alerts */
+.alert {
+  border-radius: 9px;
+  font-size: 14px;
+}
+
+/* Empty and Loading States */
+.spinner-border {
+  width: 28px;
+  height: 28px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  h2 {
+    font-size: 22px;
+  }
+
+  .card-body {
+    padding: 16px;
+  }
+
+  .card-body h3 {
+    font-size: 25px;
+  }
+
+  .table {
+    min-width: 600px;
+  }
+
+  .card-header {
+    padding: 15px 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .container-fluid {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  h2 {
+    font-size: 20px;
+  }
+}

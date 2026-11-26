@@ -1,0 +1,138 @@
+
+<div class="container-fluid py-4">
+
+  <!-- Page Header -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h2 class="fw-bold mb-1">My Classes</h2>
+      <p class="text-muted mb-0">
+        View your enrolled classes and academic year details.
+      </p>
+    </div>
+
+    <button
+      class="btn btn-outline-primary"
+      type="button"
+      (click)="loadMyClasses()"
+      [disabled]="loading">
+
+      <i class="fas fa-sync-alt me-2"></i>
+      Refresh
+    </button>
+  </div>
+
+  <!-- Error Message -->
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="text-center py-5">
+    <div class="spinner-border text-primary"></div>
+    <p class="text-muted mt-2 mb-0">
+      Loading your classes...
+    </p>
+  </div>
+
+  <!-- Empty State -->
+  <div
+    *ngIf="!loading && enrollments.length === 0 && !errorMessage"
+    class="card border-0 shadow-sm">
+
+    <div class="card-body text-center py-5">
+      <i class="fas fa-book-open fa-3x text-muted mb-3"></i>
+
+      <h5 class="fw-bold">No Classes Found</h5>
+
+      <p class="text-muted mb-0">
+        You are not currently enrolled in any classes.
+      </p>
+    </div>
+  </div>
+
+  <!-- Class Cards -->
+  <div
+    *ngIf="!loading && enrollments.length > 0"
+    class="row g-4">
+
+    <div
+      class="col-xl-4 col-md-6"
+      *ngFor="let enrollment of enrollments">
+
+      <div class="card h-100 shadow-sm border-0 class-card">
+
+        <!-- Card Header -->
+        <div class="card-header bg-primary text-white py-3">
+          <div class="d-flex justify-content-between align-items-center">
+
+            <h5 class="fw-bold mb-0">
+              {{ enrollment.grade }}
+            </h5>
+
+            <span
+              class="badge"
+              [ngClass]="enrollment.isActive ? 'bg-success' : 'bg-secondary'">
+
+              {{ enrollment.isActive ? 'Active' : 'Inactive' }}
+
+            </span>
+
+          </div>
+        </div>
+
+        <!-- Card Body -->
+        <div class="card-body">
+
+          <div class="mb-3">
+            <small class="text-muted d-block mb-1">
+              Academic Year
+            </small>
+
+            <h6 class="fw-semibold mb-0">
+              <i class="fas fa-calendar-alt text-primary me-2"></i>
+              {{ enrollment.academicYearName }}
+            </h6>
+          </div>
+
+          <div class="mb-3">
+            <small class="text-muted d-block mb-1">
+              Enrollment ID
+            </small>
+
+            <h6 class="fw-semibold mb-0">
+              #{{ enrollment.enrollmentId }}
+            </h6>
+          </div>
+
+          <div>
+            <small class="text-muted d-block mb-1">
+              Enrolled On
+            </small>
+
+            <h6 class="fw-semibold mb-0">
+              {{ enrollment.enrolledOn | date:'dd MMM yyyy' }}
+            </h6>
+          </div>
+
+        </div>
+
+        <!-- Card Footer -->
+        <div class="card-footer bg-white border-0 pt-0">
+          <div class="d-flex justify-content-between align-items-center">
+            <small class="text-muted">
+              Class ID: {{ enrollment.classId }}
+            </small>
+
+            <span class="text-primary fw-semibold small">
+              My Enrollment
+            </span>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

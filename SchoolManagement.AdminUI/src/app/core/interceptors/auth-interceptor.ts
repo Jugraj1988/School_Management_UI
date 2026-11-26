@@ -2,6 +2,7 @@
 import { HttpInterceptorFn } from '@angular/common/http';
 
 export const AuthInterceptor: HttpInterceptorFn = (req, next) => {
+
   const isLoginRequest =
     req.url.toLowerCase().includes('/authentication/login');
 
@@ -10,7 +11,8 @@ export const AuthInterceptor: HttpInterceptorFn = (req, next) => {
     return next(req);
   }
 
-  const token = localStorage.getItem('token');
+  // Read token from the current browser tab.
+  const token = sessionStorage.getItem('token');
 
   if (!token) {
     return next(req);
