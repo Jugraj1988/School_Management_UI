@@ -28,6 +28,7 @@ import { StudentLayout } from './features/student/student-layout/student-layout'
 import { StudentDashboard } from './features/student/dashboard/student-dashboard';
 import { MyAttendance } from './features/student/my-attendance/my-attendance';
 import { StudentClasses } from './features/student/my-classes/my-classes';
+import { UpdatePassword } from './app/autht/update-password/update-password';
 
 const routes: Routes = [
 
@@ -58,8 +59,12 @@ const routes: Routes = [
       {
         path: 'users',
         component: Users
-      }
-
+      },
+      {
+  path: 'update-password',
+  component: UpdatePassword,
+  canActivate: [authGuard],
+},
     ]
   },
 
@@ -90,6 +95,11 @@ const routes: Routes = [
         path: 'users',
         component: Users
       },
+      {
+  path: 'update-password',
+  component: UpdatePassword,
+  canActivate: [authGuard],
+},
 
       {
         path: '',
@@ -128,9 +138,15 @@ const routes: Routes = [
   path: 'attendance-history',
   component: AttendanceHistory
 },
-{ path: 'profile', component: Profile }
+{ path: 'profile', component: Profile },
+{
+  path: 'update-password',
+  component: UpdatePassword,
+  canActivate: [authGuard],
+},
   ]
 },
+
 {
   path: 'student',
   component: StudentLayout,
@@ -157,6 +173,11 @@ const routes: Routes = [
     //   path: 'results',
     //   component: Results
     // },
+    {
+  path: 'update-password',
+  component: UpdatePassword,
+  canActivate: [authGuard],
+},
     {
       path: '',
       redirectTo: 'dashboard',

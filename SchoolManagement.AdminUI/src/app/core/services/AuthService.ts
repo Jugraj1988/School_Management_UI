@@ -32,7 +32,7 @@ export class AuthService {
   private readonly apiUrl =
     `${environment.apiUrl}/Authentication/login`;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   login(credentials: LoginRequest): Observable<LoginResponse> {
     return this.http
@@ -79,6 +79,17 @@ export class AuthService {
   hasRole(roleName: string): boolean {
     return this.getUser()?.roleName?.trim().toLowerCase()
       === roleName.trim().toLowerCase();
+  }
+
+  changePassword(request: {
+    currentPassword: string;
+    newPassword: string;
+  }): Observable<any> {
+
+    return this.http.post(
+      `${environment.apiUrl}/Authentication/change-password`,
+      request
+    );
   }
 
   logout(): void {

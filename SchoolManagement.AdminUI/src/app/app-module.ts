@@ -37,6 +37,7 @@ import { StudentLayout } from './features/student/student-layout/student-layout'
 import { StudentDashboard } from './features/student/dashboard/student-dashboard';
 import { MyAttendance } from './features/student/my-attendance/my-attendance';
 import { StudentClasses } from './features/student/my-classes/my-classes';
+import { UpdatePassword } from './app/autht/update-password/update-password';
 
 @NgModule({
   declarations: [
@@ -62,7 +63,8 @@ import { StudentClasses } from './features/student/my-classes/my-classes';
     StudentLayout,
     StudentDashboard,
     StudentClasses,
-    MyAttendance
+    MyAttendance,
+    UpdatePassword,
   ],
   imports: [BrowserModule, AppRoutingModule, ReactiveFormsModule, FormsModule, DatePipe],
   providers: [
